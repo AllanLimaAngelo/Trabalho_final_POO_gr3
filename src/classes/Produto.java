@@ -7,9 +7,8 @@ public class Produto {
     private double vlVenda;
     private String categoria;
 	
-    public Produto(int idProduto, String descricao, double vlCusto, double vlVenda, String categoria) {
+    public Produto( String descricao, double vlCusto, double vlVenda, String categoria) {
 		super();
-		this.idProduto = idProduto;
 		this.descricao = descricao;
 		this.vlCusto = vlCusto;
 		this.vlVenda = vlVenda;
@@ -56,6 +55,12 @@ public class Produto {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+
+	@Override
+	public String toString() {
+		return  " Values ('" + descricao + "', '" + vlCusto + "', '" + vlVenda + "', '" + categoria
+				+ "')";
 	}
     
     

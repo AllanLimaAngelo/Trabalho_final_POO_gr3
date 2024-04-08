@@ -17,6 +17,12 @@ public class Cliente extends Pessoa {
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+ "Values ('" + getNome() + "', '" + getCpf() + "', '" + getDtNascimento() + "', '"
+				+ getEndereco() + "', '" + getTelefone() + "')";
+	}
 	
 	
 }

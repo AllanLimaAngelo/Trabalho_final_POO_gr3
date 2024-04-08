@@ -94,7 +94,7 @@ public class DatabaseConfig {
 		String sql = 
 					"""
 					CREATE SCHEMA IF NOT EXISTS poo;
-					CREATE TABLE IF NOT EXISTS  poo.cliente (
+					CREATE TABLE IF NOT EXISTS  poo.Cliente (
 					    idcliente SERIAL PRIMARY KEY,
 					    nome VARCHAR(100),
 					    cpf VARCHAR(14),
@@ -104,7 +104,7 @@ public class DatabaseConfig {
 					);
 					
 					
-					CREATE TABLE IF NOT EXISTS  poo.produto (
+					CREATE TABLE IF NOT EXISTS  poo.Produto (
 					    idproduto SERIAL PRIMARY KEY,
 					    descricao VARCHAR(255),
 					    vlcusto NUMERIC(10, 2),
@@ -113,7 +113,7 @@ public class DatabaseConfig {
 					);
 					
 					
-					CREATE TABLE IF NOT EXISTS  poo.pedido (
+					CREATE TABLE IF NOT EXISTS  poo.Pedido (
 					    idpedido SERIAL PRIMARY KEY,
 					    dtemissao DATE,
 					    dtentrega DATE,
@@ -122,10 +122,10 @@ public class DatabaseConfig {
 					);
 					
 					
-					CREATE TABLE IF NOT EXISTS  poo.pedidoItens (
+					CREATE TABLE IF NOT EXISTS  poo.PedidoItens (
 					    idpedidoitem SERIAL PRIMARY KEY,
-					    idpedido INTEGER REFERENCES  poo.pedido(idpedido),
-					    idproduto INTEGER REFERENCES  poo.produto(idproduto),
+					    idpedido INTEGER REFERENCES  poo.Pedido(idpedido),
+					    idproduto INTEGER REFERENCES  poo.Produto(idproduto),
 					    vlunitario NUMERIC(10, 2),
 					    qtproduto INTEGER,
 					    vldesconto NUMERIC(10, 2)

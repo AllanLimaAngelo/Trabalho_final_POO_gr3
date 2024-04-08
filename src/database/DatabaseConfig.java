@@ -24,14 +24,14 @@ public class DatabaseConfig {
 			Util.printMessage("could not find 'db.properties' file. This must mean you're running this for the first time!");
 			Util.printMessage("must create a 'db.properties' file and a new grupo2db database.");
 			Scanner inputScanner = new Scanner(System.in);
-			String user = "", password = "";
+			String user = "", password = "",port;
 			boolean success = false;
 			System.out.println("Press Enter to continue");
 			while (!success) {
 				user = Util.askInputLine("Enter your PostgreSQL user: ", inputScanner);
 				password = Util.askInputLine("Enter your PostgreSQL password: ", inputScanner);
-
-				String url = "jdbc:postgresql://localhost:5432/";
+				port = Util.askInputLine("Enter your PostgreSQL port: ", inputScanner);
+				String url = "jdbc:postgresql://localhost:" + port + "/";
 				String sql = "";
 				try (Connection connection = DriverManager.getConnection(url, user, password);
 						Statement statement = connection.createStatement()) {
@@ -42,10 +42,11 @@ public class DatabaseConfig {
 						Util.printMessage("found a database and will be using that!");
 					} else {
 						// Execute SQL command to create the database
-						sql = "CREATE DATABASE grupo2db";
-						statement.executeUpdate(sql);
+						sql = "CREATE DATABASE grupo2db;";
+					
 						System.out.println("Database created successfully.");
-
+						statement.executeUpdate(sql);
+						createTable(url, user, password);
 					}
 					success = true;
 
@@ -87,5 +88,59 @@ public class DatabaseConfig {
 	public static String getDbPassword() {
 
 		return properties.getProperty("db.password");
+	}
+	
+	public static void createTable(String url, String user,String password) {
+		String sql = 
+					"""
+					CREATE SCHEMA IF NOT EXISTS poo;
+					CREATE TABLE IF NOT EXISTS  poo.cliente (
+					    idcliente SERIAL PRIMARY KEY,
+					    nome VARCHAR(100),
+					    cpf VARCHAR(14),
+					    dtnascimento DATE,
+					    endereco VARCHAR(255),
+					    telefone VARCHAR(20)
+					);
+					
+					
+					CREATE TABLE IF NOT EXISTS  poo.produto (
+					    idproduto SERIAL PRIMARY KEY,
+					    descricao VARCHAR(255),
+					    vlcusto NUMERIC(10, 2),
+					    vlvenda NUMERIC(10, 2),
+					    categoria VARCHAR(50)
+					);
+					
+					
+					CREATE TABLE IF NOT EXISTS  poo.pedido (
+					    idpedido SERIAL PRIMARY KEY,
+					    dtemissao DATE,
+					    dtentrega DATE,
+					    valortotal NUMERIC(10, 2),
+					    observacao TEXT
+					);
+					
+					
+					CREATE TABLE IF NOT EXISTS  poo.pedidoItens (
+					    idpedidoitem SERIAL PRIMARY KEY,
+					    idpedido INTEGER REFERENCES  poo.pedido(idpedido),
+					    idproduto INTEGER REFERENCES  poo.produto(idproduto),
+					    vlunitario NUMERIC(10, 2),
+					    qtproduto INTEGER,
+					    vldesconto NUMERIC(10, 2)
+					);
+
+				""";
+     
+     try (Connection conn = DriverManager.getConnection((url + "grupo2db"), user, password);
+          Statement stmt = conn.createStatement()) {
+         
+         stmt.executeUpdate(sql);
+         System.out.println("Tables created successfully.");
+         
+     } catch (SQLException e) {
+         System.out.println("An error occurred while creating the table: " + e.getMessage());
+     }
 	}
 }

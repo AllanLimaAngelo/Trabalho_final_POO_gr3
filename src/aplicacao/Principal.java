@@ -17,9 +17,8 @@ public class Principal {
     public static boolean connectToDatabase() {
 
         try (var connection = DB.connect()) {
-
+        	
             System.out.println("Connected to PostgreSQL Database!");
-
         } catch (SQLException error) {
             System.err.println(error.getMessage());
         }

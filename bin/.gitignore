@@ -1,5 +1,6 @@
-/db.properties
-
+/aplicacao/
 /classes/
 /database/
-/aplicacao/
+/filemanager/
+/util/
+/db.properties

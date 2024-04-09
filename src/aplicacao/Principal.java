@@ -45,7 +45,7 @@ public class Principal {
     public static void cadastroPedido() {
     	 String resposta;
     	 String resposta1;
-    	 int idCliente = 0;
+    	
     	 
     	 //Cadastro de pedidos
     	do {
@@ -58,56 +58,8 @@ public class Principal {
     				3 - Nome
     				""");
     		int opcao = stringParaInt(input.nextLine());
-    		switch (opcao) {
-			case 1:
-				System.out.print("Informe ID do cliente : ");
-	    		idCliente = stringParaInt(input.nextLine());
-				break;
-			case 2:
-				System.out.print("Informe CPF do cliente : ");
-	    		String CPF = input.nextLine();
-	    		
-	    		String query = "SELECT idcliente FROM poo.Cliente Where cpf = " + " '"+CPF+"' ";
-
-	            try (
-	                Connection connection = DB.connect();
-	                Statement statement = connection.createStatement();
-	                ResultSet resultSet = statement.executeQuery(query)
-	            ) {
-	                while (resultSet.next()) {
-	                    idCliente = resultSet.getInt("idcliente");
-	                    System.out.println(resultSet.getInt("idcliente"));
-	                }
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-				break;
-			case 3:
-				System.out.print("Informe nome do cliente : ");
-	    		String nome = input.nextLine();
-	    		
-	    		String query1 = "SELECT idcliente FROM poo.Cliente Where nome = " + " '"+nome+"' ";
-
-	            try (
-	                Connection connection = DB.connect();
-	                Statement statement = connection.createStatement();
-	                ResultSet resultSet = statement.executeQuery(query1)
-	            ) {
-	                // Iterando sobre os resultados da consulta
-	                while (resultSet.next()) {
-	                    // Extraindo os dados de cada linha do resultado
-	                     idCliente = resultSet.getInt("idcliente");
-	                }
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-				break;
-			default:
-				break;
-			}
     		
-    		
-    		
+    		 int idCliente = PedidoDAO.selectCliente(opcao);
     		
     		System.out.print("Data de emissão : ");
     		String dtEmissao = input.nextLine();

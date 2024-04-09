@@ -10,11 +10,11 @@ public class PedidoItensDAO implements CRUD{
 
 	@Override
 	public void incluir(Object a) throws SQLException {
+		
 		Connection conn = DB.connect();
-		// Cria uma declaração
         Statement statement = conn.createStatement();
-        // Executa uma consulta SQL
         String insertSql = "INSERT INTO poo.PedidoItens (idpedido, idproduto, vlunitario, qtproduto, vldesconto) " + a.toString();
+        System.out.println(a.toString());
         statement.executeUpdate(insertSql);
 		
 	}

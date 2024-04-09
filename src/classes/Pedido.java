@@ -9,10 +9,10 @@ public class Pedido {
 	private LocalDate dtEntrega;
 	private double valorTotal;
 	private String observacao;
-	private String idcliente;
+	private int idcliente;
 	private List<PedidoItens> itens;
 
-	public Pedido(int idPedido, String idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
+	public Pedido(int idPedido, int idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
 			List<PedidoItens> itens) {
 		super();
 		this.idPedido = idPedido;
@@ -64,11 +64,11 @@ public class Pedido {
 		this.observacao = observacao;
 	}
 
-	public String getCliente() {
+	public int getCliente() {
 		return idcliente;
 	}
 
-	public void setCliente(String idcliente) {
+	public void setCliente(int idcliente) {
 		this.idcliente = idcliente;
 	}
 

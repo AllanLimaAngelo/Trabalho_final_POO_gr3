@@ -1,6 +1,9 @@
 package aplicacao;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,19 +45,76 @@ public class Principal {
     public static void cadastroPedido() {
     	 String resposta;
     	 String resposta1;
+    	 int idCliente = 0;
     	 
     	 //Cadastro de pedidos
     	do {
     		System.out.print("Informe numero do pedido: ");
-    		int idPedido = input.nextInt();
-    		System.out.print("Informe ID do cliente : ");
-    		String idCliente = input.next();
+    		int idPedido = stringParaInt(input.nextLine());
+    		System.out.println("""
+    				Deseja cadastrar o cliente por:
+    				1 - Código
+    				2 - CPF
+    				3 - Nome
+    				""");
+    		int opcao = stringParaInt(input.nextLine());
+    		switch (opcao) {
+			case 1:
+				System.out.print("Informe ID do cliente : ");
+	    		idCliente = stringParaInt(input.nextLine());
+				break;
+			case 2:
+				System.out.print("Informe CPF do cliente : ");
+	    		String CPF = input.nextLine();
+	    		
+	    		String query = "SELECT idcliente FROM poo.Cliente Where cpf = " + " '"+CPF+"' ";
+
+	            try (
+	                Connection connection = DB.connect();
+	                Statement statement = connection.createStatement();
+	                ResultSet resultSet = statement.executeQuery(query)
+	            ) {
+	                while (resultSet.next()) {
+	                    idCliente = resultSet.getInt("idcliente");
+	                    System.out.println(resultSet.getInt("idcliente"));
+	                }
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+				break;
+			case 3:
+				System.out.print("Informe nome do cliente : ");
+	    		String nome = input.nextLine();
+	    		
+	    		String query1 = "SELECT idcliente FROM poo.Cliente Where nome = " + " '"+nome+"' ";
+
+	            try (
+	                Connection connection = DB.connect();
+	                Statement statement = connection.createStatement();
+	                ResultSet resultSet = statement.executeQuery(query1)
+	            ) {
+	                // Iterando sobre os resultados da consulta
+	                while (resultSet.next()) {
+	                    // Extraindo os dados de cada linha do resultado
+	                     idCliente = resultSet.getInt("idcliente");
+	                }
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+				break;
+			default:
+				break;
+			}
+    		
+    		
+    		
+    		
     		System.out.print("Data de emissão : ");
-    		String dtEmissao = input.next();
+    		String dtEmissao = input.nextLine();
     		System.out.print("Data de entrega: ");
-    		String dtEntrega = input.next();// precisa proteger
+    		String dtEntrega = input.nextLine();// precisa proteger
     		System.out.print("Observação: ");
-    		String obs = input.next();// precisa proteger
+    		String obs = input.nextLine();// precisa proteger
     		i++;
     		ArrayList<PedidoItens> ListaPedidoItens = new ArrayList<>(); 		
     		Pedido p = new Pedido(idPedido, idCliente, retornaData(dtEmissao), retornaData(dtEntrega), 0d , obs, ListaPedidoItens);
@@ -62,16 +122,16 @@ public class Principal {
     		PedidoDAO dao = new PedidoDAO();
 			try {
 				dao.incluir(p.toString());
-				
+				int j= 0;
 				//Cadastro dos itens do pedido
 	    		do {
 	    		
 	    		System.out.print("Digite o código do produto: ");
-	    		int produto = input.nextInt();
+	    		int produto = stringParaInt(input.nextLine());
 	    		System.out.print("Digite a quantidade do produto: ");
-	    		int qt = input.nextInt();
+	    		int qt = stringParaInt(input.nextLine());
 	    		System.out.print("Digite o valor de desconto: ");
-	    		int desconto = input.nextInt();
+	    		int desconto =stringParaInt(input.nextLine());
 	    		
 	    		
 	    		
@@ -79,9 +139,10 @@ public class Principal {
 	    		PedidoItens pItens =new PedidoItens(idPedido, produto, 0, qt, desconto);
 	    		ListaPedidoItens.add(pItens);
 	    		PedidoItensDAO pd = new PedidoItensDAO();
-	    		pd.incluir(ajusteArraylist(ListaPedidoItens.toString()));
+	    		pd.incluir(ListaPedidoItens.get(j).toString());
 	    		System.out.println("Deseja cadastrar outro Produto? (S/N)");
-			    resposta1 = input.next();
+	    		j++;
+			    resposta1 = input.nextLine();
 	    		}while ("S".equalsIgnoreCase(resposta1));
 
 			} catch (SQLException e) {
@@ -90,7 +151,7 @@ public class Principal {
 			}
 			
 			System.out.println("Deseja cadastrar outro pedido? (S/N)");
-		    resposta = input.next();
+		    resposta = input.nextLine();
     	}while ("S".equalsIgnoreCase(resposta));
     }
     

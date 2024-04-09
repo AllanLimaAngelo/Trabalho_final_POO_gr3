@@ -1,26 +1,26 @@
 package classes;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Pedido {
 	private int idPedido;
-	private Date dtEmissao;
-	private Date dtEntrega;
+	private LocalDate dtEmissao;
+	private LocalDate dtEntrega;
 	private double valorTotal;
 	private String observacao;
-	private Cliente cliente;
+	private String idcliente;
 	private List<PedidoItens> itens;
 
-	public Pedido(int idPedido, Date dtEmissao, Date dtEntrega, double valorTotal, String observacao, Cliente cliente,
+	public Pedido(int idPedido, String idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
 			List<PedidoItens> itens) {
 		super();
 		this.idPedido = idPedido;
+		this.idcliente = idcliente;
 		this.dtEmissao = dtEmissao;
 		this.dtEntrega = dtEntrega;
 		this.valorTotal = valorTotal;
 		this.observacao = observacao;
-		this.cliente = cliente;
 		this.itens = itens;
 	}
 
@@ -32,19 +32,19 @@ public class Pedido {
 		this.idPedido = idPedido;
 	}
 
-	public Date getDtEmissao() {
+	public LocalDate getDtEmissao() {
 		return dtEmissao;
 	}
 
-	public void setDtEmissao(Date dtEmissao) {
+	public void setDtEmissao(LocalDate dtEmissao) {
 		this.dtEmissao = dtEmissao;
 	}
 
-	public Date getDtEntrega() {
+	public LocalDate getDtEntrega() {
 		return dtEntrega;
 	}
 
-	public void setDtEntrega(Date dtEntrega) {
+	public void setDtEntrega(LocalDate dtEntrega) {
 		this.dtEntrega = dtEntrega;
 	}
 
@@ -64,12 +64,12 @@ public class Pedido {
 		this.observacao = observacao;
 	}
 
-	public Cliente getCliente() {
-		return cliente;
+	public String getCliente() {
+		return idcliente;
 	}
 
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
+	public void setCliente(String idcliente) {
+		this.idcliente = idcliente;
 	}
 
 	public List<PedidoItens> getItens() {
@@ -79,6 +79,16 @@ public class Pedido {
 	public void setItens(List<PedidoItens> itens) {
 		this.itens = itens;
 	}
+
+	@Override
+	public String toString() {
+		return "Values ( '" + idPedido +"', '"+ idcliente+"', '" + dtEmissao + "', '" + dtEntrega + "', '" + valorTotal + "', '"
+				+ observacao +"')";
+	}
+
+	
+
+	
 
 	
 }

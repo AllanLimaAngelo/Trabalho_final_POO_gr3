@@ -20,9 +20,12 @@ public class Cliente extends Pessoa {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName()+ "Values ('" + getNome() + "', '" + getCpf() + "', '" + getDtNascimento() + "', '"
-				+ getEndereco() + "', '" + getTelefone() + "')";
+		return "\nCód Cliente: " + idCliente + "\n\nNome: " + getNome() + "\nCpf: " + getCpf()
+				+ "\nDtNascimento: " + getDtNascimento() + "\nEndereco: " + getEndereco() + "\nTelefone: "
+				+ getTelefone();
 	}
+
+	
 	
 	
 }

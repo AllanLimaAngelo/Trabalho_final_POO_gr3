@@ -5,12 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import aplicacao.Principal;
 import database.DB;
 
 public class PedidoDAO implements CRUD {
+	
+	private Connection connection;
+
+	
+
+	public PedidoDAO(Connection connection) {
+		this.connection = connection;
+	}
 
 	static Scanner input = new Scanner (System.in);
 	
@@ -137,10 +147,14 @@ public class PedidoDAO implements CRUD {
 	                double prVlVenda = resultSet.getDouble("vlvenda");
 	                double piQtProd = resultSet.getDouble("qtproduto");
 	                System.out.println( "\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
-	                System.out.println("Valor total do Produto " + ((prVlVenda * piQtProd) - piDescont));
+	                double totalProduto = (prVlVenda * piQtProd) - piDescont;
+	                if(totalProduto <0) {
+	                	totalProduto = 0;
+	                }
+	                System.out.println("Valor total do Produto " + totalProduto);
 	                System.out.println("\n");
-
-	                total += (prVlVenda * piQtProd) - piDescont;  
+	                
+	                total += totalProduto;  
 	            } while (resultSet.next());
 	        } else {
 	            System.out.println("Pedido não encontrado.");
@@ -179,6 +193,32 @@ public class PedidoDAO implements CRUD {
 		
 	}
 
+	public List<Pedido> listarTodos() { 
+		List<Pedido> pedidos = new ArrayList<>();
+	    String sql = "SELECT * FROM poo.pedido";
+	    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+	        ResultSet rs = stmt.executeQuery();
+	        while (rs.next()) {
+	            Pedido p = new Pedido(
+	                rs.getInt("idPedido"), 
+	                rs.getInt("idcliente"), 
+	                rs.getDate("dtEmissao"),
+	                rs.getDate("dtEntrega"), 
+	                rs.getDouble("valorTotal"), 
+	                rs.getString("observacao")
+	            );
+	            pedidos.add(p);
+	        }
+	        System.out.println("===================================");
+	        System.out.println("        LISTA DE PEDIDOS		   ");
+	        System.out.println("===================================");
+	        
+	    } catch (SQLException e) {
+        e.printStackTrace();
+	    }
+	    return pedidos;
+	}
 
+	
 	
 }

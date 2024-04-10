@@ -1,10 +1,13 @@
 package classes;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
 public class Pedido {
 	private int idPedido;
+	private Date dtEmissao1;
+	private Date dtEntrega1;
 	private LocalDate dtEmissao;
 	private LocalDate dtEntrega;
 	private double valorTotal;
@@ -22,6 +25,18 @@ public class Pedido {
 		this.valorTotal = valorTotal;
 		this.observacao = observacao;
 		this.itens = itens;
+	}
+	
+
+	public Pedido(int idPedido, int idcliente, Date dtEmissao, Date dtEntrega, 
+			double valorTotal, String observacao) {
+		super();
+		this.idPedido = idPedido;
+		this.idcliente = idcliente;
+		this.dtEmissao1 = dtEmissao;
+		this.dtEntrega1 = dtEntrega;
+		this.valorTotal = valorTotal;
+		this.observacao = observacao;
 	}
 
 	public int getIdPedido() {
@@ -55,6 +70,21 @@ public class Pedido {
 	public void setValorTotal(double valorTotal) {
 		this.valorTotal = valorTotal;
 	}
+
+	public Date getDtEmissao1() {
+		return dtEmissao1;
+	}
+
+
+	public Date getDtEntrega1() {
+		return dtEntrega1;
+	}
+
+
+	public int getIdcliente() {
+		return idcliente;
+	}
+
 
 	public String getObservacao() {
 		return observacao;

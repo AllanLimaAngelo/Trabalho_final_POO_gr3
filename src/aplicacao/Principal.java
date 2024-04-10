@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import classes.Menu;
 import classes.Pedido;
 import classes.PedidoDAO;
 import classes.PedidoItens;
@@ -21,7 +22,10 @@ public class Principal {
                 System.out.println("Conectado com sucesso!");
             }
             
-            cadastroPedido();
+            
+            
+            Menu menu = new Menu();
+            menu.exibirMenu();
     }
 
     public static boolean connectToDatabase() {

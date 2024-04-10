@@ -1,5 +1,7 @@
 package util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public final class Util {
@@ -74,4 +76,31 @@ public final class Util {
 		}
 		return choice == 1;
 	}
+	
+	  public static LocalDate retornaData(String dt) {
+			
+			 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		     LocalDate data = LocalDate.parse(dt, formatter);
+			return data;
+			
+		}
+	 
+	    //Retira os colchetes do toString de um arraylist
+	    public static String ajusteArraylist(String texto) {
+	    	String resultado = texto.substring(1, texto.length() - 1);
+	    	return resultado;
+	    	
+	    }
+
+	    public static int stringParaInt(String numeroComoString) {
+	    	int i = 0;
+	    	try {
+	    	    int numero = Integer.parseInt(numeroComoString);
+	    	    return numero;
+	    	} catch (NumberFormatException e) {
+	    	    System.err.println("A string não representa um número inteiro válido.");
+	    	}
+			return i;
+	    }
+	    
 }

@@ -22,7 +22,7 @@ public class DatabaseConfig {
 		if (!FileManager.dbPropertiesExist()) {
 			Util.printMessage(
 					"could not find 'db.properties' file. This must mean you're running this for the first time!");
-			Util.printMessage("must create a 'db.properties' file and a new grupo2db database.");
+			Util.printMessage("must create a 'db.properties' file and a new grupo3db database.");
 			Scanner inputScanner = new Scanner(System.in);
 			String user = "", password = "", port;
 			boolean success = false;
@@ -38,12 +38,12 @@ public class DatabaseConfig {
 
 					// execute a query to test if the db exists
 					ResultSet resultSet = statement
-							.executeQuery("SELECT 1 FROM pg_database WHERE datname = '" + "grupo2db" + "'");
+							.executeQuery("SELECT 1 FROM pg_database WHERE datname = '" + "grupo3db" + "'");
 					if (resultSet.next()) {
 						Util.printMessage("found a database and will be using that!");
 					} else {
 						// Execute SQL command to create the database
-						sql = "CREATE DATABASE grupo2db;";
+						sql = "CREATE DATABASE grupo3db;";
 
 						System.out.println("Database created successfully.");
 						statement.executeUpdate(sql);
@@ -115,9 +115,7 @@ public class DatabaseConfig {
 
 													CREATE TABLE IF NOT EXISTS  poo.Pedido (
 													    idpedido SERIAL PRIMARY KEY,
-
 													    idcliente INTEGER REFERENCES poo.Cliente(idcliente),
-
 													    dtemissao DATE,
 													    dtentrega DATE,
 													    valortotal NUMERIC(10, 2),
@@ -159,7 +157,7 @@ public class DatabaseConfig {
 														('Caixa de Som Bluetooth JBL', 80.00, 150.00, 'Áudio');
 												""";
 
-		try (Connection conn = DriverManager.getConnection((url + "grupo2db"), user, password);
+		try (Connection conn = DriverManager.getConnection((url + "grupo3db"), user, password);
 				Statement stmt = conn.createStatement()) {
 
 			stmt.executeUpdate(sql);

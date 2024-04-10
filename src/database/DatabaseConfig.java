@@ -115,10 +115,9 @@ public class DatabaseConfig {
 
 													CREATE TABLE IF NOT EXISTS  poo.Pedido (
 													    idpedido SERIAL PRIMARY KEY,
-<<<<<<< HEAD
+
 													    idcliente INTEGER REFERENCES poo.Cliente(idcliente),
-=======
->>>>>>> 78b8dc912ebbf00d3b6247a2caf0d740f2a7beb5
+
 													    dtemissao DATE,
 													    dtentrega DATE,
 													    valortotal NUMERIC(10, 2),

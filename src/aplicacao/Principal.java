@@ -1,9 +1,6 @@
 package aplicacao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,11 +80,7 @@ public class Principal {
 	    		System.out.print("Digite a quantidade do produto: ");
 	    		int qt = stringParaInt(input.nextLine());
 	    		System.out.print("Digite o valor de desconto: ");
-	    		int desconto =stringParaInt(input.nextLine());
-	    		
-	    		
-	    		
-	    		
+	    		int desconto =stringParaInt(input.nextLine());	
 	    		PedidoItens pItens =new PedidoItens(idPedido, produto, 0, qt, desconto);
 	    		ListaPedidoItens.add(pItens);
 	    		PedidoItensDAO pd = new PedidoItensDAO();
@@ -101,7 +94,7 @@ public class Principal {
 				e.printStackTrace();
 				
 			}
-			
+			PedidoDAO.consultarPedido(idPedido);
 			System.out.println("Deseja cadastrar outro pedido? (S/N)");
 		    resposta = input.nextLine();
     	}while ("S".equalsIgnoreCase(resposta));
@@ -131,5 +124,7 @@ public class Principal {
     	}
 		return i;
     }
+    
+    
 }
 

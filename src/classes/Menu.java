@@ -139,7 +139,7 @@ public class Menu {
 				e.printStackTrace();
 				
 			}
-			PedidoDAO.consultarPedido(idPedido);
+			pedidoDAO.consultarPedido(idPedido);
 			System.out.println("Deseja alterar o cliente do pedido? (S/N)");
 			resposta1 = scanner.nextLine();
 			if("S".equalsIgnoreCase(resposta1)) {
@@ -154,7 +154,7 @@ public class Menu {
 					System.out.println("Qual o código do novo cliente do pedido?");
 					int novoCliente = Util.stringParaInt(scanner.nextLine());
 					clienteDAO.updateCliente(novoCliente, idPedido);
-					PedidoDAO.consultarPedido(idPedido);
+					pedidoDAO.consultarPedido(idPedido);
 					break;
 
 				default:
@@ -174,7 +174,7 @@ public class Menu {
 
         List<Pedido> pedidos = pedidoDAO.listarTodos();
         for (Pedido p: pedidos) {
-            System.out.println("\nCód Pedido: " + p.getIdPedido() + "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
+            System.out.println("\nCód Pedido: " + p.getIdPedido()+"\nNome cliente: "+ p.getNomeCliente() + "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
 			+ "\nData de entrega: " + p.getDtEntrega1() + "\nValor Total: " + p.getValorTotal() + "\nObservação:  "
 			+ p.getObservacao());
             System.out.println("____________________________________");
@@ -211,14 +211,27 @@ public class Menu {
 
     private void imprimirPedidoSemProdutos() {
         System.out.println("Imprimindo pedido sem produtos...");
+        System.out.println("Digite o numero do pedido");
+        int pesquisa = Util.stringParaInt(scanner.nextLine());
+        List<Pedido> pedidos = pedidoDAO.pedidoSProduto(pesquisa);
+        for (Pedido p: pedidos) {
+            System.out.println("\nCód Pedido: " + p.getIdPedido()+"\nNome cliente: "+ p.getNomeCliente() + "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
+			+ "\nData de entrega: " + p.getDtEntrega1() + "\nValor Total: " + p.getValorTotal() + "\nObservação:  "
+			+ p.getObservacao());
+            System.out.println("____________________________________");
+        }
     }
 
     private void imprimirPedidoComProdutos() {
         System.out.println("Imprimindo pedido com produtos...");
+        System.out.println("Digite o numero do pedido");
+        int pesquisa = Util.stringParaInt(scanner.nextLine());
+        pedidoDAO.consultarPedido(pesquisa);
     }
 
     private void localizarPedidos() {
         System.out.println("Localizando pedidos...");
+        
     }
 
     public static void main(String[] args) {

@@ -108,7 +108,7 @@ public class PedidoDAO implements CRUD {
 		
 	}
 
-	public static void consultarPedido(int idPedido) {
+	public void consultarPedido(int idPedido) {
 	    double total = 0;
 	    String idPe = "";
 	    String query = """
@@ -183,9 +183,66 @@ public class PedidoDAO implements CRUD {
 
 	@Override
 	public void imprimir() {
-		
-		
+			double totalProduto= 0;
+			double total = 0;
+		    String idPe = "";
+		    String query = """
+		            Select cl.idcliente, cl.nome, pe.idpedido, pe.dtemissao, 
+		                pr.descricao, pr.vlvenda, pi.qtproduto, pi.vldesconto,
+		                pe.valortotal
+		            from     
+		                poo.cliente cl
+		            join     
+		                poo.pedido pe on cl.idcliente = pe.idcliente
+		            join 
+		                poo.pedidoitens pi on pe.idpedido = pi.idpedido
+		            join 
+		                poo.produto pr on pi.idproduto = pr.idproduto;
+		            """;
+
+		    try (Connection connection = DB.connect();
+		         PreparedStatement statement = connection.prepareStatement(query)) {
+		        ResultSet resultSet = statement.executeQuery(); // Executando o PreparedStatement
+
+		        // Imprimir o nome e o ID do cliente apenas uma vez
+		        if (resultSet.next()) {
+		            
+		            // Iterar sobre os resultados restantes
+		            do {
+		            	String idCliente = resultSet.getString("idcliente");
+			            String nomeCliente = resultSet.getString("nome");
+			            idPe = resultSet.getString("idpedido");
+			            String peDtEm = resultSet.getString("dtemissao");
+		                double piDescont = resultSet.getDouble("vldesconto");
+		                String prDesc = resultSet.getString("descricao");
+		                double prVlVenda = resultSet.getDouble("vlvenda");
+		                double piQtProd = resultSet.getDouble("qtproduto");
+		                double peValorTotal = resultSet.getDouble("valortotal");
+		                
+			            System.out.println("Numero do pedido: " + idPe +"\nCód cliente: " + idCliente + "\t\tNome: " + nomeCliente + "\nData emissão: " + peDtEm );
+			            System.out.println("________________________________________________________________________");
+		            	
+			            System.out.println( "\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
+		                
+		                System.out.println("Valor total do Produto " + totalProduto);
+		                System.out.println("\n");
+		                
+		                System.out.println("Valor Total: " + peValorTotal );
+		    		    System.out.println("-----------------------------------------------------------------------\n");
+		                total += totalProduto;  
+		            } while (resultSet.next());
+		        } else {
+		            System.out.println("Pedido não encontrado.");
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace(); // Tratamento mais adequado seria ideal
+		    }
+		    
+		    
+	
 	}
+
+
 
 	@Override
 	public void localizar() {
@@ -195,7 +252,7 @@ public class PedidoDAO implements CRUD {
 
 	public List<Pedido> listarTodos() { 
 		List<Pedido> pedidos = new ArrayList<>();
-	    String sql = "SELECT * FROM poo.pedido";
+	    String sql = "SELECT * FROM poo.pedido pe JOIN poo.cliente cl ON pe.idcliente = cl.idcliente";
 	    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 	        ResultSet rs = stmt.executeQuery();
 	        while (rs.next()) {
@@ -205,7 +262,8 @@ public class PedidoDAO implements CRUD {
 	                rs.getDate("dtEmissao"),
 	                rs.getDate("dtEntrega"), 
 	                rs.getDouble("valorTotal"), 
-	                rs.getString("observacao")
+	                rs.getString("observacao"),
+	                rs.getString("nome")
 	            );
 	            pedidos.add(p);
 	        }
@@ -219,6 +277,35 @@ public class PedidoDAO implements CRUD {
 	    return pedidos;
 	}
 
+	public List<Pedido> pedidoSProduto(int idPedido) { 
+		List<Pedido> pedidos = new ArrayList<>();
+	    String sql = "SELECT * FROM poo.pedido pe JOIN poo.cliente cl ON pe.idcliente = cl.idcliente WHERE pe.idpedido = ?";
+	    
+	    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+	    	stmt.setInt(1, idPedido);
+	    	ResultSet rs = stmt.executeQuery();
+	        
+	        while (rs.next()) {
+	            Pedido p = new Pedido(
+	                rs.getInt("idPedido"), 
+	                rs.getInt("idcliente"), 
+	                rs.getDate("dtEmissao"),
+	                rs.getDate("dtEntrega"), 
+	                rs.getDouble("valorTotal"), 
+	                rs.getString("observacao"),
+	                rs.getString("nome")
+	            );
+	            pedidos.add(p);
+	        }
+	        System.out.println("===================================");
+	        System.out.println("        LISTA DE PEDIDOS		   ");
+	        System.out.println("===================================");
+	        
+	    } catch (SQLException e) {
+        e.printStackTrace();
+	    }
+	    return pedidos;
+	}
 	
 	
 }

@@ -14,6 +14,7 @@ public class Pedido {
 	private String observacao;
 	private int idcliente;
 	private List<PedidoItens> itens;
+	private String nomeCliente;
 
 	public Pedido(int idPedido, int idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
 			List<PedidoItens> itens) {
@@ -27,9 +28,9 @@ public class Pedido {
 		this.itens = itens;
 	}
 	
-
+	//usado para localizar pedidos
 	public Pedido(int idPedido, int idcliente, Date dtEmissao, Date dtEntrega, 
-			double valorTotal, String observacao) {
+			double valorTotal, String observacao, String nomeCliente) {
 		super();
 		this.idPedido = idPedido;
 		this.idcliente = idcliente;
@@ -37,6 +38,7 @@ public class Pedido {
 		this.dtEntrega1 = dtEntrega;
 		this.valorTotal = valorTotal;
 		this.observacao = observacao;
+		this.nomeCliente = nomeCliente;
 	}
 
 	public int getIdPedido() {
@@ -114,6 +116,11 @@ public class Pedido {
 	public String toString() {
 		return "Values ( '" + idPedido +"', '"+ idcliente+"', '" + dtEmissao + "', '" + dtEntrega + "', '" + valorTotal + "', '"
 				+ observacao +"')";
+	}
+
+
+	public String getNomeCliente() {
+		return nomeCliente;
 	}
 
 	

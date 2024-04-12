@@ -43,6 +43,31 @@ public class PedidoItens {
 	}
 
 
+	public void setIdPedido(int idPedido) {
+		this.idPedido = idPedido;
+	}
+
+
+	public void setVlUnitario(double vlUnitario) {
+		this.vlUnitario = vlUnitario;
+	}
+
+
+	public void setQtProduto(int qtProduto) {
+		this.qtProduto = qtProduto;
+	}
+
+
+	public void setVlDesconto(double vlDesconto) {
+		this.vlDesconto = vlDesconto;
+	}
+
+
+	public void setIdproduto(int idproduto) {
+		this.idproduto = idproduto;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Values ( '" + idPedido + "', '" + idproduto +"', '"+ vlUnitario + "', '" + qtProduto + "', '" + vlDesconto + 

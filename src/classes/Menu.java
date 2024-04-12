@@ -15,6 +15,7 @@ public class Menu {
     private PedidoDAO pedidoDAO;
     private ClienteDAO clienteDAO;
     private ProdutoDAO produtoDAO;
+    private PedidoItensDAO pedidoItensDAO;
 
     public Menu() {
         scanner = new Scanner(System.in);
@@ -36,6 +37,7 @@ public class Menu {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        pedidoItensDAO = new PedidoItensDAO();
     }
 
     public void exibirMenu() {
@@ -194,15 +196,45 @@ public class Menu {
     }
 
     private void alterarPedido() {
-        System.out.println("Alterando um pedido existente...");
+    	System.out.println("Qual pedido deseja alterar?");
+    	int altPedido = Util.stringParaInt(scanner.nextLine());
+    	pedidoDAO.consultarPedido(altPedido);
+    	System.out.println("""
+    			Deseja:
+    			1 - Alterar cliente
+    			2 - Excluir cliente
+    			3 - Alterar produto
+    			2 - excluir produtos 
+    			""");
+    	int opcao =  Util.stringParaInt(scanner.nextLine());
+    	switch (opcao) {
+		case 1:
+			clienteDAO.updateCliente(pedidoDAO.selectCliente(),altPedido);
+			break;
 
-        System.out.print("ID do pedido: ");
-        int idPedido = scanner.nextInt();
-        Pedido pedido = pedidoDAO.localizar(idPedido);
-        if (pedido == null) {
-            System.out.println("Pedido não encontrado.");
-            return;
-        }
+		case 2: 
+			 clienteDAO.exclusaoCliente(altPedido);
+			 pedidoDAO.consultarPedido(altPedido);
+			 System.out.println("Cliente excluido com sucesso");
+			 int idCliente = pedidoDAO.selectCliente();	
+			 clienteDAO.updateCliente(idCliente,altPedido);
+			 pedidoDAO.consultarPedido(altPedido);
+			break;
+		case 3:
+			System.out.println("Qual Produto deseja alterar: ");
+			int idProduto = Util.stringParaInt(scanner.nextLine());
+    		pedidoItensDAO.alterar(altPedido);
+			pedidoItensDAO.updateProduto(idProduto);
+			break;
+		default:
+			break;
+		}
+    	
+    	
+    	
+        
+
+        
     }
 
     private void excluirPedido() {
@@ -260,10 +292,10 @@ public class Menu {
     	
     }
     
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Menu menu = new Menu();
         menu.exibirMenu();
-    }
+    }*/
     
 }
 

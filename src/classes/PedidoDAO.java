@@ -181,10 +181,12 @@ public class PedidoDAO implements CRUD <Pedido> {
 					  cl.nome, 
 					  pe.idpedido, 
 					  pe.dtemissao, 
+					  pr.idproduto,
 					  pr.descricao, 
 					  pr.vlvenda, 
 					  pi.qtproduto, 
-					  pi.vldesconto	
+					  pi.vldesconto
+					  	
 	    		FROM 
 	    			  poo.pedido pe
 	    		LEFT JOIN 
@@ -217,7 +219,8 @@ public class PedidoDAO implements CRUD <Pedido> {
 	                String prDesc = resultSet.getString("descricao");
 	                double prVlVenda = resultSet.getDouble("vlvenda");
 	                double piQtProd = resultSet.getDouble("qtproduto");
-	                System.out.println( "\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
+	                int idProd = resultSet.getInt("idproduto");
+	                System.out.println( "\nCód produto: "+ idProd +"\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
 	                double totalProduto = (prVlVenda * piQtProd) - piDescont;
 	                if(totalProduto <0) {
 	                	totalProduto = 0;
@@ -252,7 +255,6 @@ public class PedidoDAO implements CRUD <Pedido> {
 
 	@Override
 	public void excluir(int idPedido) {
-		
 	        String deletePedidoItensSql = "DELETE FROM poo.pedidoitens WHERE idpedido = ?";
 	        String deletePedidoSql = "DELETE FROM poo.pedido WHERE idpedido = ?";
 	        
@@ -414,4 +416,20 @@ public class PedidoDAO implements CRUD <Pedido> {
         return id;
 	
 	}*/
+
+
+
+	@Override
+	public void alterar(Pedido a) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void excluir() {
+		// TODO Auto-generated method stub
+		
+	}
 }

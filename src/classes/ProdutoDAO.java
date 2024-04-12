@@ -47,5 +47,19 @@ public class ProdutoDAO {
         return produtos;
     }
     
+    public void updateProduto(int idProduto,int idPedido, int novoProduto) {
+
+        String update = "UPDATE poo.pedidoitens SET idProduto = ? WHERE idpedido = ? and idProduto = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(update)) {
+            stmt.setInt(1, idProduto); 
+            stmt.setInt(2, idPedido);
+            stmt.setInt(3, novoProduto);
+            stmt.executeUpdate();
+    	 } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     
 }

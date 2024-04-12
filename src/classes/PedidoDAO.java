@@ -247,10 +247,27 @@ public class PedidoDAO implements CRUD <Pedido> {
 	    System.out.println("-----------------------------------------------------------------------\n");
 	}
 
-	@Override
-	public void excluir() {
-		// TODO Auto-generated method stub
-		
+	public void excluir(int idPedido) throws SQLException {
+	    
+	    String deleteSql = "DELETE FROM poo.Pedido WHERE idpedido = ?";
+	    
+	    try (Connection conn = DB.connect();
+	         PreparedStatement statement = conn.prepareStatement(deleteSql)) {
+	        
+	        statement.setInt(1, idPedido);
+	        
+	        int rowsDeleted = statement.executeUpdate();
+	       
+	        if (rowsDeleted > 0) {
+	            System.out.println("Pedido excluído com sucesso.");
+	        } else {
+	            System.out.println("Pedido não encontrado com o ID fornecido.");
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Ocorreu um erro ao excluir o pedido.");
+	        e.printStackTrace();
+	        throw e; 
+	    }
 	}
 
 	@Override

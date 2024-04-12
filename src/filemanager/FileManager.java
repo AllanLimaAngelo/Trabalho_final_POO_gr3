@@ -32,7 +32,7 @@ public final class FileManager {
 
         try (BufferedWriter out = new BufferedWriter(new FileWriter(path))) {
             // Write database properties to the file
-        	out.write("db.url=jdbc:postgresql://localhost:5433/grupo3db" + "\n");
+        	out.write("db.url=jdbc:postgresql://localhost:5432/grupo3db" + "\n");
             out.write("db.username=" + dbUsername + "\n");
             out.write("db.password=" + dbPassword + "\n");
             out.flush();

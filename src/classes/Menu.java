@@ -199,18 +199,17 @@ public class Menu {
 
     private void excluirPedido() {
         System.out.println("Excluindo um pedido existente...");
-
-        System.out.print("ID do pedido: ");
-        int idPedido = scanner.nextInt();
-        Pedido pedido = pedidoDAO.localizar(idPedido);
-        if (pedido == null) {
-            System.out.println("Pedido não encontrado.");
-            return;
+        
+        System.out.print("Digite o ID do pedido que deseja excluir: ");
+        int idPedido = Util.stringParaInt(scanner.nextLine());
+               
+        try {
+            pedidoDAO.excluir(idPedido);
+            System.out.println("Pedido excluído com sucesso.");
+        } catch (SQLException e) {
+            System.out.println("Ocorreu um erro ao excluir o pedido.");
+            e.printStackTrace();
         }
-
-        pedidoDAO.excluir(idPedido);
-
-        System.out.println("Pedido excluído com sucesso.");
     }
 
     private void imprimirPedidoSemProdutos() {

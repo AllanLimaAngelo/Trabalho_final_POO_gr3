@@ -160,6 +160,14 @@ public class Menu {
 					clienteDAO.updateCliente(pedidoDAO.selectCliente(), id);
 					pedidoDAO.consultarPedido(id);
 					break;
+				case 2: 
+					 clienteDAO.exclusaoCliente(id);
+					 pedidoDAO.consultarPedido(id);
+					 System.out.println("Cliente excluido com sucesso");
+					 idCliente = pedidoDAO.selectCliente();	
+					 clienteDAO.updateCliente(idCliente,id);
+					 pedidoDAO.consultarPedido(id);
+					break;
 
 				default:
 					break;

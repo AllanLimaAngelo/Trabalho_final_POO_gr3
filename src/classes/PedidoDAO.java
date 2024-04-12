@@ -1,7 +1,6 @@
 package classes;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import aplicacao.Principal;
 import database.DB;
 import util.Util;
 
@@ -180,17 +177,23 @@ public class PedidoDAO implements CRUD <Pedido> {
 	    double total = 0;
 	    int idPe = 0;
 	    String query = """
-	            Select cl.idcliente, cl.nome, pe.idpedido, pe.dtemissao, 
-	                pr.descricao, pr.vlvenda, pi.qtproduto, pi.vldesconto
-	            from     
-	                poo.cliente cl
-	            join     
-	                poo.pedido pe on cl.idcliente = pe.idcliente
-	            join 
-	                poo.pedidoitens pi on pe.idpedido = pi.idpedido
-	            join 
-	                poo.produto pr on pi.idproduto = pr.idproduto
-	            where pe.idpedido = ?;
+	            SELECT COALESCE(cl.idcliente, 0) as idcliente, 
+					  cl.nome, 
+					  pe.idpedido, 
+					  pe.dtemissao, 
+					  pr.descricao, 
+					  pr.vlvenda, 
+					  pi.qtproduto, 
+					  pi.vldesconto	
+	    		FROM 
+	    			  poo.pedido pe
+	    		LEFT JOIN 
+	    			  poo.cliente cl ON pe.idcliente = cl.idcliente
+	    		JOIN 
+	    		      poo.pedidoitens pi ON pe.idpedido = pi.idpedido
+	    		JOIN 
+	    		      poo.produto pr ON pi.idproduto = pr.idproduto
+	    		WHERE pe.idpedido = ?;
 	            """;
 
 	    try (Connection connection = DB.connect();

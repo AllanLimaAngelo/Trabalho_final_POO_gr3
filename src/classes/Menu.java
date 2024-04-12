@@ -209,16 +209,15 @@ public class Menu {
         System.out.println("Excluindo um pedido existente...");
 
         System.out.print("ID do pedido: ");
-        int idPedido = scanner.nextInt();
-        Pedido pedido = pedidoDAO.localizar(idPedido);
-        if (pedido == null) {
-            System.out.println("Pedido não encontrado.");
-            return;
+        int idPedido = Util.stringParaInt(scanner.nextLine());
+        pedidoDAO.consultarPedido(idPedido);
+        System.out.println("Deseja confirmar a exclusão? (S/N)");
+        String resposta = scanner.nextLine();
+        if("S".equalsIgnoreCase(resposta)) {
+	        pedidoDAO.excluir(idPedido);
+	        System.out.println("Pedido excluído com sucesso.");
         }
-
-        pedidoDAO.excluir(idPedido);
-
-        System.out.println("Pedido excluído com sucesso.");
+        
     }
 
     private void imprimirPedidoSemProdutos() {
@@ -246,10 +245,7 @@ public class Menu {
         
     }
 
-    public static void main(String[] args) {
-        Menu menu = new Menu();
-        menu.exibirMenu();
-    }
+    
     
     public String localizarProduto(int idp) {
     	String produto = produtoDAO.localizar(idp);
@@ -262,6 +258,11 @@ public class Menu {
     		return produto = "";
     	}
     	
+    }
+    
+    public static void main(String[] args) {
+        Menu menu = new Menu();
+        menu.exibirMenu();
     }
     
 }

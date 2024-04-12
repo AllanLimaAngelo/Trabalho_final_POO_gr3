@@ -8,4 +8,5 @@ public interface CRUD <T> {
     void excluir();
     void imprimir();
     void localizar();
+	void excluir(int i);
 }

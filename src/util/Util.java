@@ -1,6 +1,7 @@
 package util;
 
-
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -78,6 +79,12 @@ public final class Util {
 		return choice == 1;
 	}
 	
+	
+	public static Date passaPDate(LocalDate d) {
+		
+		Date data = Date.valueOf(d);
+		return data;
+	}
 	  public static LocalDate retornaData(String dt) {
 			
 			 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

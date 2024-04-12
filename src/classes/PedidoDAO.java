@@ -1,6 +1,7 @@
 package classes;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,11 +12,12 @@ import java.util.Scanner;
 
 import aplicacao.Principal;
 import database.DB;
+import util.Util;
 
-public class PedidoDAO implements CRUD {
-	
+public class PedidoDAO implements CRUD <Pedido> {
+	int idCliente = 0;
 	private Connection connection;
-
+	
 	
 
 	public PedidoDAO(Connection connection) {
@@ -24,25 +26,44 @@ public class PedidoDAO implements CRUD {
 
 	static Scanner input = new Scanner (System.in);
 	
-	public void incluir(Object pedido) throws SQLException {
+	public int incluir(Pedido pedido) throws SQLException {
 		
 		
 		Connection conn = DB.connect();
-		// Cria uma declaração
-        Statement statement = conn.createStatement();
         // Executa uma consulta SQL
-        String insertSql = "INSERT INTO poo.Pedido " + pedido.toString();
-        statement.executeUpdate(insertSql);
-		 
+        String insertSql = "INSERT INTO poo.Pedido (idcliente, dtemissao, dtentrega, valortotal, observacao) Values ( ?, ?, ?, ?, ?)";
+        PreparedStatement statement = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, pedido.getIdcliente());
+        statement.setDate(2, Util.passaPDate(pedido.getDtEmissao()));
+        statement.setDate(3, Util.passaPDate(pedido.getDtEmissao()));
+        statement.setDouble(4, pedido.getValorTotal());
+        statement.setString(5, pedido.getObservacao());
+        statement.executeUpdate();
+		ResultSet rs = statement.getGeneratedKeys();
+		int idPedido = 0;
+		if (rs.next()) {
+			idPedido = rs.getInt("idpedido");	
+		}
+        return idPedido;
 	}
 	
-	public static int selectCliente(int opcao) {
-        int idCliente=0;
-
+	
+	
+	public int selectCliente() {
+        int idCliente = 0;
+       do{
+        System.out.println("""
+   				Deseja cadastrar o cliente por:
+   				1 - Código
+   				2 - CPF
+   				3 - Nome
+   				""");
+   		int opcao = Util.stringParaInt(input.nextLine());
         switch (opcao) {
             case 1:
                 System.out.print("Informe ID do cliente : ");
-                idCliente = Principal.stringParaInt(input.nextLine());
+                int id = Util.stringParaInt(input.nextLine());
+                idCliente = consultarClientePorID(id);
                 break;
             case 2:
                 System.out.print("Informe CPF do cliente : ");
@@ -57,20 +78,27 @@ public class PedidoDAO implements CRUD {
             default:
                 break;
         }
+       }while(idCliente == 0);
         return idCliente;
     }
+	
+	private int consultarClientePorID(int id) {
+	    String query = "SELECT idcliente, nome FROM poo.Cliente WHERE idcliente = ?";
+	    
+	    return consultarClienteInt(query, id);
+	 }
 
-    private static int consultarClientePorCPF(String cpf) {
-        String query = "SELECT idcliente FROM poo.Cliente WHERE cpf = ?";
+    private int consultarClientePorCPF(String cpf) {
+        String query = "SELECT idcliente, nome FROM poo.Cliente WHERE cpf = ?";
         return consultarCliente(query, cpf);
     }
 
-    private static int consultarClientePorNome(String nome) {
-        String query = "SELECT idcliente FROM poo.Cliente WHERE nome = ?";
+    private int consultarClientePorNome(String nome) {
+        String query = "SELECT idcliente, nome FROM poo.Cliente WHERE nome = ?";
         return consultarCliente(query, nome);
     }
 
-    private static int consultarCliente(String query, String parametro) {
+    private int consultarCliente(String query, String parametro) {
         int idCliente = 0;
         
         try (Connection connection = DB.connect();
@@ -78,12 +106,20 @@ public class PedidoDAO implements CRUD {
 
             statement.setString(1, parametro);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    idCliente = resultSet.getInt("idcliente");
-                    System.out.println("ID do cliente: " + idCliente);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    idCliente = rs.getInt("idcliente");
+                    
+                    System.out.println("Cód Cliente: " + idCliente + " Nome Cliente: " + rs.getString("nome"));
+                    System.out.println("Deseja confirmar o cliente? (S/N)");
+                    String resposta = input.nextLine();
+                    if("S".equalsIgnoreCase(resposta)){
+                    	
+                    	idCliente = rs.getInt("idcliente");
+                    }
                 } else {
                     System.out.println("Cliente não encontrado.");
+                    selectCliente();
                 }
             }
         } catch (SQLException e) {
@@ -91,7 +127,39 @@ public class PedidoDAO implements CRUD {
         }
         return idCliente;
     }
+    
+    private int consultarClienteInt(String query, int parametro) {
+        int idCliente = 0;
+        
+        try (Connection connection = DB.connect();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
+            statement.setInt(1, parametro);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    
+                	
+                    
+                    System.out.println("Cód Cliente: " + rs.getInt("idcliente") + " Nome Cliente: " + rs.getString("nome"));
+                    System.out.println("Deseja confirmar o cliente? (S/N)");
+                    String resposta = input.nextLine();
+                    if("S".equalsIgnoreCase(resposta)){
+                    	
+                    	idCliente = rs.getInt("idcliente");
+                    }
+                } else {
+                    System.out.println("Cliente não encontrado.");
+                    selectCliente();
+                    
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Tratamento mais adequado seria ideal
+        }
+        return idCliente;
+    }
+    
     // Método para converter String em Inteiro
     public static int stringParaInt(String str) {
         try {
@@ -110,7 +178,7 @@ public class PedidoDAO implements CRUD {
 
 	public void consultarPedido(int idPedido) {
 	    double total = 0;
-	    String idPe = "";
+	    int idPe = 0;
 	    String query = """
 	            Select cl.idcliente, cl.nome, pe.idpedido, pe.dtemissao, 
 	                pr.descricao, pr.vlvenda, pi.qtproduto, pi.vldesconto
@@ -134,7 +202,7 @@ public class PedidoDAO implements CRUD {
 	        if (resultSet.next()) {
 	            String idCliente = resultSet.getString("idcliente");
 	            String nomeCliente = resultSet.getString("nome");
-	            idPe = resultSet.getString("idpedido");
+	            idPe = resultSet.getInt("idpedido");
 	            String peDtEm = resultSet.getString("dtemissao");
 	            System.out.println("-----------------------------------------------------------------------\n");
 	            System.out.println("Numero do pedido: " + idPe +"\nCód cliente: " + idCliente + "\t\tNome: " + nomeCliente + "\nData emissão: " + peDtEm );
@@ -164,9 +232,13 @@ public class PedidoDAO implements CRUD {
 	    }
 	    
 	    try (Connection conn = DB.connect()){
-	        Statement statement = conn.createStatement();
-	        String insertSql = "UPDATE poo.pedido SET valortotal = "+total+" WHERE idpedido = "+ idPe;
-	        statement.executeUpdate(insertSql);
+	      
+	        String insertSql = "UPDATE poo.pedido SET valortotal = ? WHERE idpedido = ?";
+	        
+	        PreparedStatement statement = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+	        statement.setDouble(1, total);
+	        statement.setInt(2, idPe);
+	        statement.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
@@ -306,6 +378,18 @@ public class PedidoDAO implements CRUD {
 	    }
 	    return pedidos;
 	}
+	/*public int capturarIdPedido() {
+        String sql = "Select idpedido from poo.Pedido order by idpedido desc limit 1";
+        int id =0;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+           
+           id=rs.getInt("idPedido");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
 	
-	
+	}*/
 }

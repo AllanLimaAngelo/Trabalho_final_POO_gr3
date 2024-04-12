@@ -6,20 +6,19 @@ import java.util.List;
 
 public class Pedido {
 	private int idPedido;
+	private int idcliente;
 	private Date dtEmissao1;
 	private Date dtEntrega1;
 	private LocalDate dtEmissao;
 	private LocalDate dtEntrega;
 	private double valorTotal;
 	private String observacao;
-	private int idcliente;
 	private List<PedidoItens> itens;
 	private String nomeCliente;
 
-	public Pedido(int idPedido, int idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
+	public Pedido( int idcliente, LocalDate dtEmissao, LocalDate dtEntrega, double valorTotal, String observacao,
 			List<PedidoItens> itens) {
 		super();
-		this.idPedido = idPedido;
 		this.idcliente = idcliente;
 		this.dtEmissao = dtEmissao;
 		this.dtEntrega = dtEntrega;
@@ -96,11 +95,11 @@ public class Pedido {
 		this.observacao = observacao;
 	}
 
-	public int getCliente() {
+	public int getIdCliente() {
 		return idcliente;
 	}
 
-	public void setCliente(int idcliente) {
+	public void setIdCliente(int idcliente) {
 		this.idcliente = idcliente;
 	}
 
@@ -114,7 +113,7 @@ public class Pedido {
 
 	@Override
 	public String toString() {
-		return "Values ( '" + idPedido +"', '"+ idcliente+"', '" + dtEmissao + "', '" + dtEntrega + "', '" + valorTotal + "', '"
+		return "Values ( '" + idcliente+"', '" + dtEmissao + "', '" + dtEntrega + "', '" + valorTotal + "', '"
 				+ observacao +"')";
 	}
 

@@ -11,7 +11,7 @@ import database.DB;
 import util.Util;
 
 public class Menu {
-    private Scanner scanner;
+    Scanner scanner;
     private PedidoDAO pedidoDAO;
     private ClienteDAO clienteDAO;
     private ProdutoDAO produtoDAO;
@@ -30,7 +30,12 @@ public class Menu {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        produtoDAO = new ProdutoDAO(null);
+        try {
+			produtoDAO = new ProdutoDAO(DB.connect());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public void exibirMenu() {
@@ -86,60 +91,60 @@ public class Menu {
         System.out.println("Criando novo pedido...");
         System.out.println("-----------------------------------");
         String resposta;
-   	 String resposta1;
+   	 	String resposta1;
    	
    	 
    	 //Cadastro de pedidos
    	do {
    		int j= 0;
-   		System.out.print("Informe numero do pedido: ");
-   		int idPedido = Util.stringParaInt(scanner.nextLine());
-   		System.out.println("""
-   				Deseja cadastrar o cliente por:
-   				1 - Código
-   				2 - CPF
-   				3 - Nome
-   				""");
-   		int opcao = Util.stringParaInt(scanner.nextLine());
+   		//System.out.print("Informe numero do pedido: ");
+   		//int idPedido = Util.stringParaInt(scanner.nextLine());
    		
-   		 int idCliente = PedidoDAO.selectCliente(opcao);
+   		
+   		int  idCliente = pedidoDAO.selectCliente();
    		
    		System.out.print("Data de emissão : ");
    		String dtEmissao = scanner.nextLine();
+   		System.out.println(dtEmissao);
    		System.out.print("Data de entrega: ");
    		String dtEntrega = scanner.nextLine();// precisa proteger
    		System.out.print("Observação: ");
    		String obs = scanner.nextLine();// precisa proteger
-   	
+   		int id =0;
    		ArrayList<PedidoItens> ListaPedidoItens = new ArrayList<>(); 		
-   		Pedido p = new Pedido(idPedido, idCliente, Util.retornaData(dtEmissao), Util.retornaData(dtEntrega), 0d , obs, ListaPedidoItens);
-		System.out.println(p.toString());
+   		Pedido p = new Pedido( idCliente, Util.retornaData(dtEmissao), Util.retornaData(dtEntrega), 0d , obs, ListaPedidoItens);
 			try {
-				pedidoDAO.incluir(p.toString());
+				id = pedidoDAO.incluir(p);
 				
 				//Cadastro dos itens do pedido
 	    		do {
-	    		
-	    		System.out.print("Digite o código do produto: ");
-	    		int produto = Util.stringParaInt(scanner.nextLine());
-	    		System.out.print("Digite a quantidade do produto: ");
-	    		int qt = Util.stringParaInt(scanner.nextLine());
-	    		System.out.print("Digite o valor de desconto: ");
-	    		int desconto =Util.stringParaInt(scanner.nextLine());	
-	    		PedidoItens pItens =new PedidoItens(idPedido, produto, 0, qt, desconto);
-	    		ListaPedidoItens.add(pItens);
-	    		PedidoItensDAO pd = new PedidoItensDAO();
-	    		pd.incluir(ListaPedidoItens.get(j).toString());
-	    		System.out.println("Deseja cadastrar outro Produto? (S/N)");
-	    		j++;
-			    resposta1 = scanner.nextLine();
+	    			String lp;
+	    			int produto = 0; 
+		    		do {
+		    			lp = "";
+			    		System.out.print("Digite o código do produto: ");
+			    		produto =Util.stringParaInt(scanner.nextLine());
+			    		lp = localizarProduto(produto);
+		    		}while(lp == "");
+		    		System.out.print("Digite a quantidade do produto: ");
+		    		int qt = Util.stringParaInt(scanner.nextLine());
+		    		System.out.print("Digite o valor de desconto: ");
+		    		int desconto =Util.stringParaInt(scanner.nextLine());	
+		    		
+		    		PedidoItens pItens =new PedidoItens(id , produto, 0, qt, desconto);
+		    		ListaPedidoItens.add(pItens);
+		    		PedidoItensDAO pd = new PedidoItensDAO();
+		    		pd.incluir(ListaPedidoItens.get(j));
+		    		System.out.println("Deseja cadastrar outro Produto? (S/N)");
+		    		j++;
+				    resposta1 = scanner.nextLine();
 	    		}while ("S".equalsIgnoreCase(resposta1));
 
 			} catch (SQLException e) {
 				e.printStackTrace();
 				
 			}
-			pedidoDAO.consultarPedido(idPedido);
+			pedidoDAO.consultarPedido(id);
 			System.out.println("Deseja alterar o cliente do pedido? (S/N)");
 			resposta1 = scanner.nextLine();
 			if("S".equalsIgnoreCase(resposta1)) {
@@ -147,14 +152,13 @@ public class Menu {
 						1 - Alterar cliente
 						2 - Excluir o cliente
 						""");
-				opcao = Util.stringParaInt(scanner.nextLine());
-				switch (opcao) {
+				switch (Util.stringParaInt(scanner.nextLine())) {
 				case 1: 
 					clienteDAO.listarTodos();
-					System.out.println("Qual o código do novo cliente do pedido?");
-					int novoCliente = Util.stringParaInt(scanner.nextLine());
-					clienteDAO.updateCliente(novoCliente, idPedido);
-					pedidoDAO.consultarPedido(idPedido);
+					//System.out.println("Qual o código do novo cliente do pedido?");
+					//int novoCliente = Util.stringParaInt(scanner.nextLine());
+					clienteDAO.updateCliente(pedidoDAO.selectCliente(), id);
+					pedidoDAO.consultarPedido(id);
 					break;
 
 				default:
@@ -216,9 +220,9 @@ public class Menu {
         List<Pedido> pedidos = pedidoDAO.pedidoSProduto(pesquisa);
         for (Pedido p: pedidos) {
             System.out.println("\nCód Pedido: " + p.getIdPedido()+"\nNome cliente: "+ p.getNomeCliente() + "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
-			+ "\nData de entrega: " + p.getDtEntrega1() + "\nValor Total: " + p.getValorTotal() + "\nObservação:  "
+			+"\n----------------------------------\n"+ "\nData de entrega: " + p.getDtEntrega1() + "\nValor Total: " + p.getValorTotal() + "\nObservação:  "
 			+ p.getObservacao());
-            System.out.println("____________________________________");
+            System.out.println("__________________________________");
         }
     }
 
@@ -238,5 +242,19 @@ public class Menu {
         Menu menu = new Menu();
         menu.exibirMenu();
     }
+    
+    public String localizarProduto(int idp) {
+    	String produto = produtoDAO.localizar(idp);
+    	System.out.println(produto);
+    	System.out.println("Confirma o produto? (S/N)");
+    	String resposta = scanner.nextLine();
+    	if("S".equalsIgnoreCase(resposta)){
+    		return produto;
+    	}else{
+    		return produto = "";
+    	}
+    	
+    }
+    
 }
 

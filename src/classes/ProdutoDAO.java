@@ -14,14 +14,16 @@ public class ProdutoDAO {
         this.connection = connection;
     }
 
-    public Produto localizar(int id) {
-        String sql = "SELECT * FROM Produto WHERE idproduto=?";
+    public String localizar(int id) {
+    	String produto = "";
+        String sql = "SELECT * FROM poo.Produto WHERE idproduto=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Produto(rs.getString("descricao"), rs.getDouble("vlcusto"), rs.getDouble("vlvenda"),
-                        rs.getString("categoria"));
+            	produto = "\n-----------------------------\n"+"Nome: " +rs.getString("descricao") + "\n\nCusto unitário: "+ rs.getDouble("vlcusto")+"\n\nValor de venda: " + rs.getDouble("vlvenda") +
+                      "\n\nCategoria: " +  rs.getString("categoria")+"\n-----------------------------\n";
+            	return produto;
             }
         } catch (SQLException e) {
             e.printStackTrace();

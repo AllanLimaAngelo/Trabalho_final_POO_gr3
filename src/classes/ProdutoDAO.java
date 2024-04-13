@@ -33,7 +33,7 @@ public class ProdutoDAO {
 
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM Produto";
+        String sql = "SELECT * FROM poo.produto";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -60,6 +60,4 @@ public class ProdutoDAO {
 			e.printStackTrace();
 		}
     }
-    
-    
 }

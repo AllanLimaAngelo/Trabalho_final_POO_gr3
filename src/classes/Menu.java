@@ -1,12 +1,10 @@
 package classes;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.swing.JList;
-
 import database.DB;
 import util.Util;
 
@@ -228,13 +226,7 @@ public class Menu {
 			break;
 		default:
 			break;
-		}
-    	
-    	
-    	
-        
-
-        
+		} 
     }
 
     private void excluirPedido() {
@@ -273,8 +265,60 @@ public class Menu {
     }
 
     private void localizarPedidos() {
-        System.out.println("Localizando pedidos...");
-        
+        System.out.println("Como deseja localizar os pedidos?");
+        System.out.println("1 - Por código");
+        System.out.println("2 - Por cliente");
+        System.out.println("3 - Por data");
+        int opcao = Util.stringParaInt(scanner.nextLine());
+
+        List<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            switch (opcao) {
+                case 1:
+                    pedidos = buscarPedidosPorCodigo();
+                    break;
+                case 2:
+                    pedidos = buscarPedidosPorCliente();
+                    break;
+                case 3:
+                    pedidos = buscarPedidosPorData();
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+                    return;
+            }
+
+            if (!pedidos.isEmpty()) {
+                System.out.println("Pedidos encontrados:");
+                pedidos.forEach(pedido -> System.out.println(pedido.toString()));
+            } else {
+                System.out.println("Nenhum pedido encontrado.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato de data inválido. Use o formato AAAA-MM-DD.");
+        } catch (SQLException e) {
+            System.out.println("Ocorreu um erro ao buscar os pedidos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private List<Pedido> buscarPedidosPorCodigo() throws SQLException {
+        System.out.println("Digite o código do pedido:");
+        int codigo = Util.stringParaInt(scanner.nextLine());
+        return pedidoDAO.localizarPedidos(codigo, 0, null);
+    }
+
+    private List<Pedido> buscarPedidosPorCliente() throws SQLException {
+        System.out.println("Digite o ID do cliente:");
+        int idCliente = Util.stringParaInt(scanner.nextLine());
+        return pedidoDAO.localizarPedidos(0, idCliente, null);
+    }
+
+    private List<Pedido> buscarPedidosPorData() throws SQLException {
+        System.out.println("Digite a data de emissão (AAAA-MM-DD):");
+        Date dataEmissao = Date.valueOf(scanner.nextLine());
+        return pedidoDAO.localizarPedidos(0, 0, dataEmissao);
     }
 
     

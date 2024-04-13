@@ -1,6 +1,7 @@
 package classes;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import database.DB;
 import util.Util;
 
@@ -167,11 +169,51 @@ public class PedidoDAO implements CRUD <Pedido> {
     }
 	
 
-	@Override
-	public void alterar() {
-	
-		
-	}
+    public List<Pedido> localizarPedidos(int codigo, int idCliente, Date dataEmissao) {
+        List<Pedido> pedidos = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM poo.Pedido WHERE 1=1");
+
+        if (codigo != 0) {
+            sql.append(" AND idPedido = ?");
+        }
+        if (idCliente != 0) {
+            sql.append(" AND idcliente = ?");
+        }
+        if (dataEmissao != null) {
+            sql.append(" AND dtemissao = ?");
+        }
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+            int parameterIndex = 1;
+            if (codigo != 0) {
+                stmt.setInt(parameterIndex++, codigo);
+            }
+            if (idCliente != 0) {
+                stmt.setInt(parameterIndex++, idCliente);
+            }
+            if (dataEmissao != null) {
+                stmt.setDate(parameterIndex++, dataEmissao); // Adiciona ++ para incrementar o índice corretamente
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido pedido = new Pedido(
+                    rs.getInt("idPedido"), 
+                    rs.getInt("idcliente"), 
+                    rs.getDate("dtEmissao"),
+                    rs.getDate("dtEntrega"), 
+                    rs.getDouble("valorTotal"), 
+                    rs.getString("observacao"),
+                    "" // Adiciona um valor vazio para o parâmetro "nomeCliente" ou remove-o se não for necessário
+                );
+                pedidos.add(pedido);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+
 
 	public void consultarPedido(int idPedido) {
 	    double total = 0;

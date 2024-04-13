@@ -1,7 +1,6 @@
 package classes;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import aplicacao.Principal;
 import database.DB;
 import util.Util;
 
@@ -180,17 +177,25 @@ public class PedidoDAO implements CRUD <Pedido> {
 	    double total = 0;
 	    int idPe = 0;
 	    String query = """
-	            Select cl.idcliente, cl.nome, pe.idpedido, pe.dtemissao, 
-	                pr.descricao, pr.vlvenda, pi.qtproduto, pi.vldesconto
-	            from     
-	                poo.cliente cl
-	            join     
-	                poo.pedido pe on cl.idcliente = pe.idcliente
-	            join 
-	                poo.pedidoitens pi on pe.idpedido = pi.idpedido
-	            join 
-	                poo.produto pr on pi.idproduto = pr.idproduto
-	            where pe.idpedido = ?;
+	            SELECT COALESCE(cl.idcliente, 0) as idcliente, 
+					  cl.nome, 
+					  pe.idpedido, 
+					  pe.dtemissao, 
+					  pr.idproduto,
+					  pr.descricao, 
+					  pr.vlvenda, 
+					  pi.qtproduto, 
+					  pi.vldesconto
+					  	
+	    		FROM 
+	    			  poo.pedido pe
+	    		LEFT JOIN 
+	    			  poo.cliente cl ON pe.idcliente = cl.idcliente
+	    		JOIN 
+	    		      poo.pedidoitens pi ON pe.idpedido = pi.idpedido
+	    		JOIN 
+	    		      poo.produto pr ON pi.idproduto = pr.idproduto
+	    		WHERE pe.idpedido = ?;
 	            """;
 
 	    try (Connection connection = DB.connect();
@@ -214,7 +219,8 @@ public class PedidoDAO implements CRUD <Pedido> {
 	                String prDesc = resultSet.getString("descricao");
 	                double prVlVenda = resultSet.getDouble("vlvenda");
 	                double piQtProd = resultSet.getDouble("qtproduto");
-	                System.out.println( "\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
+	                int idProd = resultSet.getInt("idproduto");
+	                System.out.println( "\nCód produto: "+ idProd +"\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
 	                double totalProduto = (prVlVenda * piQtProd) - piDescont;
 	                if(totalProduto <0) {
 	                	totalProduto = 0;
@@ -247,27 +253,28 @@ public class PedidoDAO implements CRUD <Pedido> {
 	    System.out.println("-----------------------------------------------------------------------\n");
 	}
 
-	public void excluir(int idPedido) throws SQLException {
-	    
-	    String deleteSql = "DELETE FROM poo.Pedido WHERE idpedido = ?";
-	    
-	    try (Connection conn = DB.connect();
-	         PreparedStatement statement = conn.prepareStatement(deleteSql)) {
+	@Override
+	public void excluir(int idPedido) {
+	        String deletePedidoItensSql = "DELETE FROM poo.pedidoitens WHERE idpedido = ?";
+	        String deletePedidoSql = "DELETE FROM poo.pedido WHERE idpedido = ?";
 	        
-	        statement.setInt(1, idPedido);
-	        
-	        int rowsDeleted = statement.executeUpdate();
-	       
-	        if (rowsDeleted > 0) {
-	            System.out.println("Pedido excluído com sucesso.");
-	        } else {
-	            System.out.println("Pedido não encontrado com o ID fornecido.");
+	        try (PreparedStatement deletePedidoItensStatement = connection.prepareStatement(deletePedidoItensSql);
+	             PreparedStatement deletePedidoStatement = connection.prepareStatement(deletePedidoSql)) {
+	            
+	            // Exclui os itens do pedido
+	            deletePedidoItensStatement.setInt(1, idPedido);
+	            deletePedidoItensStatement.executeUpdate();
+	            
+	            // Exclui o pedido
+	            deletePedidoStatement.setInt(1, idPedido);
+	            deletePedidoStatement.executeUpdate();
+	            
+	            System.out.println("Pedido e seus itens excluídos com sucesso!");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
 	        }
-	    } catch (SQLException e) {
-	        System.out.println("Ocorreu um erro ao excluir o pedido.");
-	        e.printStackTrace();
-	        throw e; 
-	    }
+	    
+		
 	}
 
 	@Override
@@ -409,4 +416,20 @@ public class PedidoDAO implements CRUD <Pedido> {
         return id;
 	
 	}*/
+
+
+
+	@Override
+	public void alterar(Pedido a) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void excluir() {
+		// TODO Auto-generated method stub
+		
+	}
 }

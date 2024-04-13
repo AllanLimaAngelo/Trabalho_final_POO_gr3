@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -79,6 +80,19 @@ public class ClienteDAO {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    public void exclusaoCliente(int idPedido) {
+    	 String update = "UPDATE poo.pedido SET idcliente = null WHERE idpedido = ?";
+    	    try (PreparedStatement stmt = connection.prepareStatement(update)) {
+    	        stmt.setInt(1, idPedido);
+    	        stmt.executeUpdate();
+    	    } catch (SQLException e) {
+    	        // Trate a exceção adequadamente
+    	        e.printStackTrace();
+    	    }
+        
+       
+
     }
     	
 }

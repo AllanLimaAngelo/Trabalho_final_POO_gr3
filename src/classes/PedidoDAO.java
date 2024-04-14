@@ -171,16 +171,18 @@ public class PedidoDAO implements CRUD <Pedido> {
 
     public List<Pedido> localizarPedidos(int codigo, int idCliente, Date dataEmissao) {
         List<Pedido> pedidos = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM poo.Pedido WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT p.*, c.nome FROM poo.Pedido p ");
+        sql.append("INNER JOIN poo.Cliente c ON p.idcliente = c.idcliente ");
+        sql.append("WHERE 1=1 ");
 
         if (codigo != 0) {
-            sql.append(" AND idPedido = ?");
+            sql.append("AND p.idPedido = ?");
         }
         if (idCliente != 0) {
-            sql.append(" AND idcliente = ?");
+            sql.append("AND p.idcliente = ?");
         }
         if (dataEmissao != null) {
-            sql.append(" AND dtemissao = ?");
+            sql.append("AND p.dtemissao = ?");
         }
 
         try (PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
@@ -192,7 +194,7 @@ public class PedidoDAO implements CRUD <Pedido> {
                 stmt.setInt(parameterIndex++, idCliente);
             }
             if (dataEmissao != null) {
-                stmt.setDate(parameterIndex++, dataEmissao); // Adiciona ++ para incrementar o índice corretamente
+                stmt.setDate(parameterIndex++, dataEmissao);
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -200,11 +202,11 @@ public class PedidoDAO implements CRUD <Pedido> {
                 Pedido pedido = new Pedido(
                     rs.getInt("idPedido"), 
                     rs.getInt("idcliente"), 
-                    rs.getDate("dtEmissao"),
-                    rs.getDate("dtEntrega"), 
-                    rs.getDouble("valorTotal"), 
+                    rs.getDate("dtemissao"), 
+                    rs.getDate("dtentrega"), 
+                    rs.getDouble("valortotal"), 
                     rs.getString("observacao"),
-                    "" // Adiciona um valor vazio para o parâmetro "nomeCliente" ou remove-o se não for necessário
+                    rs.getString("nome")
                 );
                 pedidos.add(pedido);
             }

@@ -271,54 +271,49 @@ public class Menu {
         System.out.println("3 - Por data");
         int opcao = Util.stringParaInt(scanner.nextLine());
 
-        List<Pedido> pedidos = new ArrayList<>();
-
         try {
             switch (opcao) {
                 case 1:
-                    pedidos = buscarPedidosPorCodigo();
+                    System.out.println("Digite o código do pedido:");
+                    int codigo = Util.stringParaInt(scanner.nextLine());
+                    List<Pedido> pedidosPorCodigo = pedidoDAO.localizarPedidos(codigo, 0, null);
+                    exibirPedidos(pedidosPorCodigo);
                     break;
                 case 2:
-                    pedidos = buscarPedidosPorCliente();
+                    System.out.println("Digite o ID do cliente:");
+                    int idCliente = Util.stringParaInt(scanner.nextLine());
+                    List<Pedido> pedidosPorCliente = pedidoDAO.localizarPedidos(0, idCliente, null);
+                    exibirPedidos(pedidosPorCliente);
                     break;
                 case 3:
-                    pedidos = buscarPedidosPorData();
+                    System.out.println("Digite a data de emissão (AAAA-MM-DD):");
+                    Date dataEmissao = Date.valueOf(scanner.nextLine());
+                    List<Pedido> pedidosPorData = pedidoDAO.localizarPedidos(0, 0, dataEmissao);
+                    exibirPedidos(pedidosPorData);
                     break;
                 default:
                     System.out.println("Opção inválida.");
-                    return;
-            }
-
-            if (!pedidos.isEmpty()) {
-                System.out.println("Pedidos encontrados:");
-                pedidos.forEach(pedido -> System.out.println(pedido.toString()));
-            } else {
-                System.out.println("Nenhum pedido encontrado.");
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Formato de data inválido. Use o formato AAAA-MM-DD.");
-        } catch (SQLException e) {
-            System.out.println("Ocorreu um erro ao buscar os pedidos: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    private List<Pedido> buscarPedidosPorCodigo() throws SQLException {
-        System.out.println("Digite o código do pedido:");
-        int codigo = Util.stringParaInt(scanner.nextLine());
-        return pedidoDAO.localizarPedidos(codigo, 0, null);
-    }
-
-    private List<Pedido> buscarPedidosPorCliente() throws SQLException {
-        System.out.println("Digite o ID do cliente:");
-        int idCliente = Util.stringParaInt(scanner.nextLine());
-        return pedidoDAO.localizarPedidos(0, idCliente, null);
-    }
-
-    private List<Pedido> buscarPedidosPorData() throws SQLException {
-        System.out.println("Digite a data de emissão (AAAA-MM-DD):");
-        Date dataEmissao = Date.valueOf(scanner.nextLine());
-        return pedidoDAO.localizarPedidos(0, 0, dataEmissao);
+    private void exibirPedidos(List<Pedido> pedidos) {
+        if (!pedidos.isEmpty()) {
+            System.out.println("Pedidos encontrados:");
+            for (Pedido pedido : pedidos) {
+                System.out.println("Código do Pedido: " + pedido.getIdPedido());
+                System.out.println("Nome do Cliente: " + pedido.getNomeCliente());
+                System.out.println("Data de Emissão: " + pedido.getDtEmissao());
+                System.out.println("Data de Entrega: " + pedido.getDtEntrega());
+                System.out.println("Valor Total: " + pedido.getValorTotal());
+                System.out.println("Observação: " + pedido.getObservacao());
+                System.out.println("----------------------------------");
+            }
+        } else {
+            System.out.println("Nenhum pedido encontrado.");
+        }
     }
 
     

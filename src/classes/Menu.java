@@ -208,10 +208,12 @@ public class Menu {
 		int opcao = Util.stringParaInt(scanner.nextLine());
 		switch (opcao) {
 		case 1:
+			quadroC();
 			clienteDAO.updateCliente(pedidoDAO.selectCliente(), altPedido);
 			break;
 
 		case 2:
+			quadroC();
 			clienteDAO.exclusaoCliente(altPedido);
 			pedidoDAO.consultarPedido(altPedido);
 			System.out.println("Cliente excluido com sucesso");
@@ -222,6 +224,7 @@ public class Menu {
 		case 3:
 			System.out.println("Qual Produto deseja alterar: ");
 			int idProduto = Util.stringParaInt(scanner.nextLine());
+			quadroP();
 			pedidoItensDAO.alterar(altPedido);
 			pedidoItensDAO.updateProduto(idProduto);
 			break;

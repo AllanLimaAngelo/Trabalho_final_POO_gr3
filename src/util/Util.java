@@ -109,13 +109,20 @@ public final class Util {
 
 	    public static int stringParaInt(String numeroComoString) {
 	    	int i = 0;
-	    	try {
-	    	    int numero = Integer.parseInt(numeroComoString);
-	    	    return numero;
-	    	} catch (NumberFormatException e) {
+	    	boolean a;
+	    	do {
+	    		 a= false;
+	    		try {
+	    			int numero = Integer.parseInt(numeroComoString);
+	    			return numero;
+	    		} catch (NumberFormatException e) {
 	    	    System.err.println("A string não representa um número inteiro válido.");
+	    	    System.out.println("Digite um numérico válido: ");
+	    	    numeroComoString = scanner.nextLine();
+	    	    a=true;
 	    	}
-			return i;
+	    	}while(a);
+	    	return i;
 	    }
 	    
 }

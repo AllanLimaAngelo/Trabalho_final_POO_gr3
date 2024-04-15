@@ -4,12 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
-import util.Util;
 
 public class ClienteDAO {
     private Connection connection;
@@ -89,10 +85,32 @@ public class ClienteDAO {
     	    } catch (SQLException e) {
     	        // Trate a exceção adequadamente
     	        e.printStackTrace();
-    	    }
-        
-       
+    	    }        
 
     }
+    
+    public void quadroClientes() {
+	   
+    	 
+ 	    String sql = "SELECT * FROM poo.Cliente";
+ 	    System.out.println("==========================================");
+ 	    System.out.println("|           LISTA DE CLIENTES		 | ");
+ 	    System.out.println("==========================================");
+ 	    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+ 	        ResultSet rs = stmt.executeQuery();
+ 	        while (rs.next()) {
+ 	        	System.out.printf("|%2d | %-17s | %-14s |\n", rs.getInt("idcliente"), rs.getString("nome"), rs.getString("cpf"));
+ 	                rs.getString("nome"); 
+ 	                rs.getString("cpf"); 
+ 	                rs.getInt("idcliente");
+ 	            
+ 	            
+ 	        }
+ 	        System.out.println("==========================================");
+ 	    } catch (SQLException e) {
+ 	        e.printStackTrace();
+ 	    }
+    	
+	}
     	
 }

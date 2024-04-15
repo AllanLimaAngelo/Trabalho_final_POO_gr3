@@ -2,6 +2,7 @@ package aplicacao;
 
 import java.sql.SQLException;
 import java.util.Scanner;
+
 import classes.Menu;
 import database.DB;
 
@@ -15,8 +16,7 @@ public class Principal {
                 System.out.println("Conectado com sucesso!");
             }
             
-            
-            
+          
 			
             Menu menu = new Menu();
             menu.exibirMenu();

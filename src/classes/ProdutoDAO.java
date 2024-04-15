@@ -98,9 +98,29 @@ public class ProdutoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-	
-
-    	
     }
+        
+        public void quadroProduto() {
+     	   
+       	 
+     	    String sql = "SELECT * FROM poo.produto";
+     	    System.out.println("==========================================");
+     	    System.out.println("|           LISTA DE PRODUTOS		 | ");
+     	    System.out.println("==========================================");
+     	    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+     	        ResultSet rs = stmt.executeQuery();
+     	        while (rs.next()) {
+     	        	System.out.printf("|%2d | %-34s |\n", rs.getInt("idproduto"), rs.getString("descricao"));
+     	                
+     	            
+     	            
+     	        }
+     	        System.out.println("==========================================");
+     	    } catch (SQLException e) {
+     	        e.printStackTrace();
+     	    }
+        		
+    	
     
+    }
 }

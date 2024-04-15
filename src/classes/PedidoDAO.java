@@ -446,20 +446,6 @@ public class PedidoDAO implements CRUD <Pedido> {
 	    }
 	    return pedidos;
 	}
-	/*public int capturarIdPedido() {
-        String sql = "Select idpedido from poo.Pedido order by idpedido desc limit 1";
-        int id =0;
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-           
-           id=rs.getInt("idPedido");
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return id;
-	
-	}*/
 
 
 

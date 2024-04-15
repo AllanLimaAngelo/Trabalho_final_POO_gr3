@@ -113,7 +113,6 @@ public class Principal {
 		
 	}
  
-    //Retira os colchetes do toString de um arraylist
     public static String ajusteArraylist(String texto) {
     	String resultado = texto.substring(1, texto.length() - 1);
     	return resultado;

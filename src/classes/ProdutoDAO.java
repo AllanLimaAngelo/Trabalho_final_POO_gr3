@@ -56,10 +56,51 @@ public class ProdutoDAO {
             stmt.setInt(3, novoProduto);
             stmt.executeUpdate();
     	 } catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
     }
     
+ public void excluirProduto(int idProduto, int idPedido) {
+    	
+    	
+    	String delete = "delete from poo.pedidoitens where idproduto = ? and idpedido = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(delete)) {
+            
+        	stmt.setInt(1, idProduto);
+            stmt.setInt(2, idPedido);
+            stmt.executeUpdate();
+            
+            
+            
+            System.out.println("Pedido e seus itens excluídos com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	
+
+    	
+    }
+    public void excluirTodosProdutos(int idPedido) {
+    	
+    	
+    	String delete = "delete from poo.pedidoitens where idpedido = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(delete)) {
+            
+            stmt.setInt(1, idPedido);
+            stmt.executeUpdate();
+            
+            
+            
+            System.out.println("Itens excluídos com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	
+
+    	
+    }
     
 }

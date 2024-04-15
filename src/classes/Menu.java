@@ -201,7 +201,7 @@ public class Menu {
 				1 - Alterar cliente
 				2 - Excluir cliente
 				3 - Alterar produto
-				2 - excluir produtos
+				4 - excluir produtos
 				""");
 		int opcao = Util.stringParaInt(scanner.nextLine());
 		switch (opcao) {
@@ -223,6 +223,38 @@ public class Menu {
 			pedidoItensDAO.alterar(altPedido);
 			pedidoItensDAO.updateProduto(idProduto);
 			break;
+		case 4 :
+			System.out.println("""
+					Deseja: 
+					1 - excluir 1 produto
+					2 - excluir todos
+					""");
+			int opcao2 = Util.stringParaInt(scanner.nextLine());
+			switch (opcao2) {
+			case 1:
+				System.out.println("Código do produto a excluir");
+				idProduto = Util.stringParaInt(scanner.nextLine());
+				produtoDAO.excluirProduto(idProduto, altPedido);
+				break;
+
+			case 2:
+				System.out.println("Deseja confirmar exclusão? (S/N)");
+				String resposta1 = scanner.nextLine();
+				if("S".equalsIgnoreCase(resposta1)){
+					produtoDAO.excluirTodosProdutos(altPedido);
+					try {
+						pedidoItensDAO.incluir(pedidoItensDAO.alterar(altPedido));
+					} catch (SQLException e) {
+						
+						e.printStackTrace();
+					}
+				}
+				
+				break;
+			default:
+				break;
+			}
+			
 		default:
 			break;
 		}

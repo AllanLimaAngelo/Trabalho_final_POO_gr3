@@ -53,7 +53,7 @@ public class PedidoItensDAO implements CRUD <PedidoItens>{
 	}
 	
 
-	public void alterar( int idPedido) {
+	public PedidoItens alterar( int idPedido) {
 		String resposta1 = "";			
 			String lp;
 			int produto = 0; 
@@ -68,7 +68,7 @@ public class PedidoItensDAO implements CRUD <PedidoItens>{
 			System.out.print("Digite o valor de desconto: ");
 			int desconto =Util.stringParaInt(scanner.nextLine());
 			pItens1 =new PedidoItens(idPedido , produto, 0, qt, desconto);
-					
+			return pItens1;		
 	}
 	
 	 public void updateProduto(int idProduto) {

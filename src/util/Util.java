@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public final class Util {
-		
+		static Scanner scanner = new Scanner(System.in);
 
 	private Util() {
 		throw new AssertionError();
@@ -86,11 +86,18 @@ public final class Util {
 		return data;
 	}
 	  public static LocalDate retornaData(String dt) {
+		  LocalDate data = null;
+		  
+		  while (dt.length()!=10){
+			  
+			System.err.println("Data inválida!!!");
+			System.out.println("Digite uma data válida: ");
+			dt = scanner.nextLine();
+		  } 
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			data = LocalDate.parse(dt, formatter); 
 			
-			 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		     LocalDate data = LocalDate.parse(dt, formatter);
 			return data;
-			
 		}
 	 
 	    //Retira os colchetes do toString de um arraylist

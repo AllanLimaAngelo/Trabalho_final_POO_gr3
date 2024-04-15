@@ -2,6 +2,7 @@ package classes;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -102,30 +103,33 @@ public class Menu {
 
 			int idCliente = pedidoDAO.selectCliente();
 			
-			System.out.print("Data de emissão : ");
-			String dtEmissao = scanner.nextLine();
+			System.out.print("Data de emissão: ");
+			LocalDate dtEmissao = Util.retornaData(scanner.nextLine());
 			System.out.print("Data de entrega: ");
-			String dtEntrega = scanner.nextLine();// precisa proteger
+			LocalDate dtEntrega = Util.retornaData(scanner.nextLine());
 			System.out.print("Observação: ");
 			String obs = scanner.nextLine();// precisa proteger
 			int id = 0;
 			ArrayList<PedidoItens> ListaPedidoItens = new ArrayList<>();
-			Pedido p = new Pedido(idCliente, Util.retornaData(dtEmissao), Util.retornaData(dtEntrega), 0d, obs,
+			Pedido p = new Pedido(idCliente, dtEmissao, dtEntrega, 0d, obs,
 					ListaPedidoItens);
 			try {
 				id = pedidoDAO.incluir(p);
 
 				// Cadastro dos itens do pedido
 				do {
-					String lp;
+					String lp = "";
 					int produto = 0;
 					quadroP();
 					do {
-						lp = "";
+						
 						System.out.print("Digite o código do produto: ");
 						produto = Util.stringParaInt(scanner.nextLine());
 						lp = localizarProduto(produto);
-					} while (lp == "");
+						if(lp == null ) {
+							System.err.println("Código inválido, digite outro código!");
+						}
+					} while (lp == null|| lp =="");
 					System.out.print("Digite a quantidade do produto: ");
 					int qt = Util.stringParaInt(scanner.nextLine());
 					System.out.print("Digite o valor de desconto: ");

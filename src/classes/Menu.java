@@ -92,6 +92,7 @@ public class Menu {
 		System.out.println("-----------------------------------");
 		String resposta;
 		String resposta1;
+		quadroC();
 
 		// Cadastro de pedidos
 		do {
@@ -100,10 +101,9 @@ public class Menu {
 			// int idPedido = Util.stringParaInt(scanner.nextLine());
 
 			int idCliente = pedidoDAO.selectCliente();
-
+			
 			System.out.print("Data de emissão : ");
 			String dtEmissao = scanner.nextLine();
-			System.out.println(dtEmissao);
 			System.out.print("Data de entrega: ");
 			String dtEntrega = scanner.nextLine();// precisa proteger
 			System.out.print("Observação: ");
@@ -119,6 +119,7 @@ public class Menu {
 				do {
 					String lp;
 					int produto = 0;
+					quadroP();
 					do {
 						lp = "";
 						System.out.print("Digite o código do produto: ");
@@ -193,6 +194,7 @@ public class Menu {
 	}
 
 	private void alterarPedido() {
+		listarPedidos();
 		System.out.println("Qual pedido deseja alterar?");
 		int altPedido = Util.stringParaInt(scanner.nextLine());
 		pedidoDAO.consultarPedido(altPedido);
@@ -242,6 +244,8 @@ public class Menu {
 				String resposta1 = scanner.nextLine();
 				if("S".equalsIgnoreCase(resposta1)){
 					produtoDAO.excluirTodosProdutos(altPedido);
+					System.out.println("Cadastrar novo produto:");
+					quadroP();
 					try {
 						pedidoItensDAO.incluir(pedidoItensDAO.alterar(altPedido));
 					} catch (SQLException e) {

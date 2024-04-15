@@ -328,10 +328,40 @@ public class Menu {
 		}
 
 	}
-
-	/*
-	 * public static void main(String[] args) { Menu menu = new Menu();
-	 * menu.exibirMenu(); }
-	 */
-
+	
+	private void quadroC() {
+	    System.out.println("""
+	                        
+	                        ===========================================
+	                        |  1 | João Silva        | 123.456.789-01 |
+	                        |  2 | Maria Santos      | 987.654.321-02 |
+	                        |  3 | Pedro Oliveira    | 246.135.798-03 |
+	                        |  4 | Ana Pereira       | 789.321.654-04 |
+	                        |  5 | Luiza Costa       | 456.789.123-05 |
+	                        |  6 | Marcos Souza      | 159.357.246-06 |
+	                        |  7 | Carla Mendes      | 654.321.987-07 |
+	                        |  8 | Rafaela Lima      | 852.963.741-08 |
+	                        |  9 | Gustavo Fernandes | 369.258.147-09 |
+	                        | 10 | Fernanda Torres   | 741.852.963-10 |
+	                        ===========================================
+	                        """);
+	}
+	
+	private void quadroP() {
+	    System.out.println("""
+	                            
+	                        ===========================================
+	                        |  1 | Smartphone Samsung Galaxy          |
+	                        |  2 | Notebook Dell Inspiron             |
+	                        |  3 | Fone de Ouvido Bluetooth Sony      |
+	                        |  4 | TV LED 55" 4K LG                   |
+	                        |  5 | Console de Videogame PlayStation 5 |
+	                        |  6 | Câmera DSLR Canon EOS              |
+	                        |  7 | Tablet Samsung Galaxy Tab          |
+	                        |  8 | Impressora Multifuncional HP       |
+	                        |  9 | Smartwatch Xiaomi Mi Band          |
+	                        | 10 | Caixa de Som Bluetooth JBL         |
+	                        ===========================================
+	                        """);
+	}
 }

@@ -85,6 +85,11 @@ public final class Util {
 		Date data = Date.valueOf(d);
 		return data;
 	}
+	public static String passaPLocalDate(Date d) {
+		 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	     String dataFormatada = sdf.format(d);
+	     return dataFormatada;   
+	}
 	  public static LocalDate retornaData(String dt) {
 		  LocalDate data = null;
 		  

@@ -159,14 +159,7 @@ public class PedidoDAO implements CRUD <Pedido> {
         return idCliente;
     }
     
-    // Método para converter String em Inteiro
-    public static int stringParaInt(String str) {
-        try {
-            return Integer.parseInt(str);
-        } catch (NumberFormatException e) {
-            return 0; // Ou lance uma exceção, dependendo do comportamento desejado
-        }
-    }
+    
 	
 
     public List<Pedido> localizarPedidos(int codigo, int idCliente, Date dataEmissao) {
@@ -252,7 +245,7 @@ public class PedidoDAO implements CRUD <Pedido> {
 	            String idCliente = resultSet.getString("idcliente");
 	            String nomeCliente = resultSet.getString("nome");
 	            idPe = resultSet.getInt("idpedido");
-	            String peDtEm = resultSet.getString("dtemissao");
+	            String peDtEm = Util.passaPLocalDate(resultSet.getDate("dtemissao"));
 	            System.out.println("-----------------------------------------------------------------------\n");
 	            System.out.println("Numero do pedido: " + idPe +"\nCód cliente: " + idCliente + "\t\tNome: " + nomeCliente + "\nData emissão: " + peDtEm );
 	            System.out.println("-----------------------------------------------------------------------");
@@ -386,7 +379,6 @@ public class PedidoDAO implements CRUD <Pedido> {
 
 	@Override
 	public void localizar() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -451,7 +443,7 @@ public class PedidoDAO implements CRUD <Pedido> {
 
 	@Override
 	public void alterar(Pedido a) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -459,7 +451,7 @@ public class PedidoDAO implements CRUD <Pedido> {
 
 	@Override
 	public void excluir() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }

@@ -1,6 +1,5 @@
 package classes;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -190,8 +189,8 @@ public class Menu {
 		List<Pedido> pedidos = pedidoDAO.listarTodos();
 		for (Pedido p : pedidos) {
 			System.out.println("\nCód Pedido: " + p.getIdPedido() + "\nNome cliente: " + p.getNomeCliente()
-					+ "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
-					+ "\nData de entrega: " + p.getDtEntrega1() + "\nValor Total: " + p.getValorTotal()
+					+ "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + Util.passaPLocalDate(p.getDtEmissao1())
+					+ "\nData de entrega: " + Util.passaPLocalDate(p.getDtEntrega1()) + "\nValor Total: " + p.getValorTotal()
 					+ "\nObservação:  " + p.getObservacao());
 			System.out.println("____________________________________");
 		}
@@ -293,8 +292,8 @@ public class Menu {
 		List<Pedido> pedidos = pedidoDAO.pedidoSProduto(pesquisa);
 		for (Pedido p : pedidos) {
 			System.out.println("\nCód Pedido: " + p.getIdPedido() + "\nNome cliente: " + p.getNomeCliente()
-					+ "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + p.getDtEmissao1()
-					+ "\n----------------------------------\n" + "\nData de entrega: " + p.getDtEntrega1()
+					+ "\nCód Cliente: " + p.getIdcliente() + "\n\nData de emissão: " + Util.passaPLocalDate(p.getDtEmissao1())
+					+ "\n----------------------------------\n" + "\nData de entrega: " + Util.passaPLocalDate(p.getDtEntrega1())
 					+ "\nValor Total: " + p.getValorTotal() + "\nObservação:  " + p.getObservacao());
 			System.out.println("__________________________________");
 		}
@@ -329,9 +328,9 @@ public class Menu {
 				exibirPedidos(pedidosPorCliente);
 				break;
 			case 3:
-				System.out.println("Digite a data de emissão (AAAA-MM-DD):");
-				Date dataEmissao = Date.valueOf(scanner.nextLine());
-				List<Pedido> pedidosPorData = pedidoDAO.localizarPedidos(0, 0, dataEmissao);
+				System.out.println("Digite a data de emissão (DD/MM/AAAA):");
+				LocalDate dataEmissao = Util.retornaData(scanner.nextLine());
+				List<Pedido> pedidosPorData = pedidoDAO.localizarPedidos(0, 0, Util.passaPDate(dataEmissao));
 				exibirPedidos(pedidosPorData);
 				break;
 			default:
@@ -348,8 +347,8 @@ public class Menu {
 			for (Pedido pedido : pedidos) {
 				System.out.println("Código do Pedido: " + pedido.getIdPedido());
 				System.out.println("Nome do Cliente: " + pedido.getNomeCliente());
-				System.out.println("Data de Emissão: " + pedido.getDtEmissao1());
-				System.out.println("Data de Entrega: " + pedido.getDtEntrega1());
+				System.out.println("Data de Emissão: " + Util.passaPLocalDate(pedido.getDtEmissao1()));
+				System.out.println("Data de Entrega: " + Util.passaPLocalDate(pedido.getDtEntrega1()));
 				System.out.println("Valor Total: " + pedido.getValorTotal());
 				System.out.println("Observação: " + pedido.getObservacao());
 				System.out.println("----------------------------------");

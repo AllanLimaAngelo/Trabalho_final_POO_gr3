@@ -133,6 +133,10 @@ public class Menu {
 					int qt = Util.stringParaInt(scanner.nextLine());
 					System.out.print("Digite o valor de desconto: ");
 					int desconto = Util.stringParaInt(scanner.nextLine());
+					if (desconto > 90) {
+						System.out.printf("O valor de %2d é superior ao valor máximo de desconto de 90%%, valor foi ajustado para 90%%\n", desconto);
+						desconto = 90;
+					}
 
 					PedidoItens pItens = new PedidoItens(id, produto, 0, qt, desconto);
 					ListaPedidoItens.add(pItens);

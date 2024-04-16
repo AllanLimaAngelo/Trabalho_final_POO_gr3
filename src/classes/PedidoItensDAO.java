@@ -67,6 +67,10 @@ public class PedidoItensDAO implements CRUD <PedidoItens>{
 			int qt = Util.stringParaInt(scanner.nextLine());
 			System.out.print("Digite o valor de desconto: ");
 			int desconto =Util.stringParaInt(scanner.nextLine());
+			if (desconto > 90) {
+				System.out.printf("O valor de %2d é superior ao valor máximo de desconto de 90%%, valor foi ajustado para 90%%\n", desconto);
+				desconto = 90;
+			}
 			pItens1 =new PedidoItens(idPedido , produto, 0, qt, desconto);
 			return pItens1;		
 	}

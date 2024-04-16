@@ -258,7 +258,7 @@ public class PedidoDAO implements CRUD <Pedido> {
 	                double piQtProd = resultSet.getDouble("qtproduto");
 	                int idProd = resultSet.getInt("idproduto");
 	                System.out.println( "\nCód produto: "+ idProd +"\nNome Produto: " + prDesc + "\nValor Produto: " + prVlVenda + "\nQuantidade: " + piQtProd +"\nValor de desconto: " + piDescont);
-	                double totalProduto = (prVlVenda * piQtProd) - piDescont;
+	                double totalProduto = (prVlVenda * piQtProd) * (1 - (piDescont/100));
 	                if(totalProduto <0) {
 	                	totalProduto = 0;
 	                }
